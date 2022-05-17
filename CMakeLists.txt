@@ -7,13 +7,29 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin")
 
 option(BUILD_TEST "build test modules" ON)
 
+macro(LIST_HEADER path list)
+    file(GLOB files RELATIVE ${path} ${path}/*.h*)
+    foreach(file ${files})
+        list(APPEND ${list} ${path}/${file})
+    endforeach()
+endmacro()
+
+macro(LIST_SRC path list)
+    file(GLOB files RELATIVE ${path} ${path}/*.cc)
+    foreach(file ${files})
+        list(APPEND ${list} ${path}/${file})
+    endforeach()
+endmacro()
+
 if (BUILD_TEST)
     find_package(GTest REQUIRED)
     find_package(Threads REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS})
 endif()
 
-add_library(sftd SHARED main.cc)
+include(sugars/CMakeLists.txt)
+
+add_library(sftd SHARED main.cc ${SUGAR_HEADER} ${SUGAR_SRC})
 
 if (BUILD_TEST)
     file(GLOB test_files RELATIVE ${CMAKE_SOURCE_DIR}/tests ${CMAKE_SOURCE_DIR}/tests/*.cc)
