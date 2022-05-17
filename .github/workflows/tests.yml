@@ -1,0 +1,25 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - README.md
+      - .gitignore
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - README.md
+      - .gitignore
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install google test
+        shell: bash
+        run: sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make
+      - name: do tests
+        shell: bash
+        run: ./test.sh

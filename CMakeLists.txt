@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.20)
+project(sftd)
+
+set(CMAKE_CXX_STANDARD 17)
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/tests")
+set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin")
+
+option(BUILD_TEST "build test modules" ON)
+
+if (BUILD_TEST)
+    find_package(GTest REQUIRED)
+    find_package(Threads REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
+endif()
+
+add_library(sftd SHARED main.cc)
+
+if (BUILD_TEST)
+    file(GLOB test_files RELATIVE ${CMAKE_SOURCE_DIR}/tests ${CMAKE_SOURCE_DIR}/tests/*.cc)
+    foreach(filename ${test_files})
+        string(REPLACE ".cc" "" test_name ${filename})
+        message("-- build test: ${test_name}")
+        add_executable(${test_name} ${CMAKE_SOURCE_DIR}/tests/${filename})
+        target_link_libraries(${test_name} ${LIBRARY_OUTPUT_PATH}/libsftd.so)
+        target_link_libraries(${test_name} ${GTEST_BOTH_LIBRARIES})
+        target_link_libraries(${test_name} ${CMAKE_THREAD_LIBS_INIT})
+    endforeach()
+endif()
