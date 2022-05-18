@@ -25,6 +25,7 @@
 #define SFTD_MATCH_HPP
 
 #include <functional>
+#include <optional>
 
 template<typename ParamType, typename ReturnType = void>
 class Match {
@@ -33,9 +34,20 @@ private:
   struct MatchResult {
     bool matched = false;
     Match* self = nullptr;
+    std::optional<MatchType> param;
 
-    Match& operator->() {
-      return *self
+    Match& operator()(const std::function<ReturnType(MatchType)>& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        if (param.has_value()) {
+          self->m_result = p_func(param.value());
+        }
+        else {
+          self->m_result = p_func();
+        }
+      }
+
+      return *self;
     }
   };
 
@@ -51,13 +63,20 @@ public:
 
   MatchResult<void> Case(const ParamType& p_pattern) {
     MatchResult<void> result{};
-    result.matched = m_input == p_pattern;
+    result.matched = !m_matched && m_input == p_pattern;
     result.self = *this;
     return result;
   }
 
+  std::optional<ReturnType> operator()() const {
+    return m_result;
+  }
+
 private:
   const ParamType& m_input;
+  bool m_matched;
+
+  std::optional<ReturnType> m_result;
 };
 
 #endif // SFTD_MATCH_HPP

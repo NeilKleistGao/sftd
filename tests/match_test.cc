@@ -23,6 +23,8 @@
 
 #include <gtest/gtest.h>
 
+#include "sugars/match.hpp"
+
 TEST(EmptyTest, EmptyTest) {
   EXPECT_EQ(true, true);
 }

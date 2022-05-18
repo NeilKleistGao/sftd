@@ -6,6 +6,7 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/tests")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin")
 
 option(BUILD_TEST "build test modules" ON)
+include_directories(.)
 
 macro(LIST_HEADER path list)
     file(GLOB files RELATIVE ${path} ${path}/*.h*)
