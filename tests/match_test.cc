@@ -50,13 +50,13 @@ TEST(MatchTest, ValueMatchTest) {
   EXPECT_EQ(res1.value(), 4);
 
   auto res2 = Matcher<std::string, int>::Match("To be")
-      ->Case("To be")([](const std::string& _) -> int {
+      ->Case("To be")([]() -> int {
         return 1;
       })
-      ->Case("Not to be")([](const std::string& _) -> int {
+      ->Case("Not to be")([]() -> int {
         return 0;
       })
-      ->CaseDefault()([](const std::string& _) -> int {
+      ->CaseDefault()([]() -> int {
         return -1;
       })->Result();
 

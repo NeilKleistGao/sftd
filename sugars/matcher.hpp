@@ -40,6 +40,7 @@ private:
 
     using RefFunc = std::function<ReturnType(const MatchType&)>;
     using PointerFunc = std::function<ReturnType(MatchType*)>;
+    using IgnoreFunc = std::function<ReturnType()>;
 
     Matcher* operator()(const RefFunc& p_func) {
       if (matched) {
@@ -54,6 +55,15 @@ private:
       if (matched) {
         self->m_matched = true;
         self->m_result = p_func(param.value());
+      }
+
+      return self;
+    }
+
+    Matcher* operator()(const IgnoreFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        self->m_result = p_func();
       }
 
       return self;
@@ -129,11 +139,21 @@ private:
     std::optional<std::string> param;
 
     using RefFunc = std::function<ReturnType(const std::string&)>;
+    using IgnoreFunc = std::function<ReturnType()>;
 
     Matcher* operator()(const RefFunc& p_func) {
       if (matched) {
         self->m_matched = true;
         self->m_result = p_func(param.value());
+      }
+
+      return self;
+    }
+
+    Matcher* operator()(const IgnoreFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        self->m_result = p_func();
       }
 
       return self;
