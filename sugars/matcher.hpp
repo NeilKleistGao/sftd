@@ -19,7 +19,7 @@
 * SOFTWARE.
  */
 
-/// @file match.hpp
+/// @file matcher.hpp
 
 #ifndef SFTD_MATCHER_HPP
 #define SFTD_MATCHER_HPP
@@ -27,9 +27,9 @@
 #include <functional>
 #include <optional>
 #include <memory>
-#include <type_traits>
+#include <regex>
 
-template<typename ParamType, typename ReturnType>
+template<typename ParamType, typename ReturnType, bool Reg = false>
 class Matcher {
 private:
   template <typename MatchType>
@@ -115,6 +115,74 @@ public:
 
 private:
   const ParamType& m_input;
+  bool m_matched;
+
+  std::optional<ReturnType> m_result;
+};
+
+template<typename ReturnType>
+class Matcher<std::string, ReturnType, true> {
+private:
+  struct MatchResult {
+    bool matched = false;
+    Matcher* self = nullptr;
+    std::optional<std::string> param;
+
+    using RefFunc = std::function<ReturnType(const std::string&)>;
+
+    Matcher* operator()(const RefFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        self->m_result = p_func(param.value());
+      }
+
+      return self;
+    }
+  };
+
+public:
+  explicit Matcher(const std::string& p_input) : m_input(p_input), m_matched(false) {
+  }
+
+  static std::unique_ptr<Matcher> Match(const std::string& p_input) {
+    return std::make_unique<Matcher>(p_input);
+  }
+
+  ~Matcher() = default;
+  Matcher(const Matcher&) = delete;
+  Matcher& operator=(const Matcher&) = delete;
+  Matcher(Matcher&&) = delete;
+  Matcher& operator=(Matcher&&) = delete;
+
+  MatchResult Case(const std::string& p_pattern) {
+    MatchResult result{};
+    std::regex reg{p_pattern};
+    result.matched = !m_matched && std::regex_match(m_input, reg);
+    if (result.matched) {
+      result.param = m_input;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+  MatchResult CaseDefault() {
+    MatchResult result{};
+    result.matched = !m_matched;
+    if (result.matched) {
+      result.param = m_input;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+  std::optional<ReturnType> Result() const {
+    return m_result;
+  }
+
+private:
+  const std::string& m_input;
   bool m_matched;
 
   std::optional<ReturnType> m_result;
