@@ -21,54 +21,69 @@
 
 /// @file match.hpp
 
-#ifndef SFTD_MATCH_HPP
-#define SFTD_MATCH_HPP
+#ifndef SFTD_MATCHER_HPP
+#define SFTD_MATCHER_HPP
 
 #include <functional>
 #include <optional>
+#include <memory>
 
-template<typename ParamType, typename ReturnType = void>
-class Match {
+template<typename ParamType, typename ReturnType>
+class Matcher {
 private:
   template <typename MatchType>
   struct MatchResult {
     bool matched = false;
-    Match* self = nullptr;
+    Matcher* self = nullptr;
     std::optional<MatchType> param;
 
-    Match& operator()(const std::function<ReturnType(MatchType)>& p_func) {
+    Matcher* operator()(const std::function<ReturnType(const MatchType&)>& p_func) {
       if (matched) {
         self->m_matched = true;
-        if (param.has_value()) {
-          self->m_result = p_func(param.value());
-        }
-        else {
-          self->m_result = p_func();
-        }
+        self->m_result = p_func(param.value());
       }
 
-      return *self;
+      return self;
     }
   };
 
 public:
-  explicit Match(const ParamType& p_input) : m_input(p_input), m_matched(false) {
+  explicit Matcher(const ParamType& p_input) : m_input(p_input), m_matched(false) {
   }
 
-  ~Match() = default;
-  Match(const Match&) = delete;
-  Match& operator=(const Match&) = delete;
-  Match(Match&&) = delete;
-  Match& operator=(Match&&) = delete;
+  static std::unique_ptr<Matcher> Match(const ParamType& p_input) {
+    return std::make_unique<Matcher>(p_input);
+  }
 
-  MatchResult<void> Case(const ParamType& p_pattern) {
-    MatchResult<void> result{};
+  ~Matcher() = default;
+  Matcher(const Matcher&) = delete;
+  Matcher& operator=(const Matcher&) = delete;
+  Matcher(Matcher&&) = delete;
+  Matcher& operator=(Matcher&&) = delete;
+
+  MatchResult<ParamType> Case(const ParamType& p_pattern) {
+    MatchResult<ParamType> result{};
     result.matched = !m_matched && m_input == p_pattern;
-    result.self = *this;
+    if (result.matched) {
+      result.param = m_input;
+    }
+
+    result.self = this;
     return result;
   }
 
-  std::optional<ReturnType> operator()() const {
+  MatchResult<ParamType> CaseDefault() {
+    MatchResult<ParamType> result{};
+    result.matched = !m_matched;
+    if (result.matched) {
+      result.param = m_input;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+  std::optional<ReturnType> Result() const {
     return m_result;
   }
 
@@ -79,4 +94,4 @@ private:
   std::optional<ReturnType> m_result;
 };
 
-#endif // SFTD_MATCH_HPP
+#endif // SFTD_MATCHER_HPP

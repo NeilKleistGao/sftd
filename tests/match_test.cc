@@ -23,8 +23,67 @@
 
 #include <gtest/gtest.h>
 
-#include "sugars/match.hpp"
+#include "sugars/matcher.hpp"
 
-TEST(EmptyTest, EmptyTest) {
-  EXPECT_EQ(true, true);
+TEST(MatchTest, ValueMatchTest) {
+  auto res1 = Matcher<int, int>::Match(42)
+      ->Case(2)([](const int& _) -> int {
+        return 0;
+      })
+      ->Case(12)([](const int& _) -> int {
+        return 1;
+      })
+      ->Case(22)([](const int& _) -> int {
+        return 2;
+      })
+      ->Case(32)([](const int& _) -> int {
+        return 3;
+      })
+      ->Case(42)([](const int& _) -> int {
+        return 4;
+      })
+      ->Case(52)([](const int& _) -> int {
+        return 5;
+      })->Result();
+
+  EXPECT_EQ(res1.has_value(), true);
+  EXPECT_EQ(res1.value(), 4);
+
+  auto res2 = Matcher<std::string, int>::Match("To be")
+      ->Case("To be")([](const std::string& _) -> int {
+        return 1;
+      })
+      ->Case("Not to be")([](const std::string& _) -> int {
+        return 0;
+      })
+      ->CaseDefault()([](const std::string& _) -> int {
+        return -1;
+      })->Result();
+
+  EXPECT_EQ(res2.has_value(), true);
+  EXPECT_EQ(res2.value(), 1);
+
+  auto res3 = Matcher<std::string, int>::Match("TODO")
+      ->Case("To be")([](const std::string& _) -> int {
+        return 1;
+      })
+      ->Case("Not to be")([](const std::string& _) -> int {
+        return 0;
+      })->Result();
+
+  EXPECT_EQ(res3.has_value(), false);
+
+  auto res4 = Matcher<std::string, std::string>::Match("TODO")
+      ->Case("To be")([](const std::string& _) -> std::string {
+        return "Yep";
+      })
+      ->Case("Not to be")([](const std::string& _) -> std::string {
+        return "Nop";
+      })
+      ->CaseDefault()([](const std::string& _) -> std::string {
+        return "WTF?";
+      })->Result();
+
+  EXPECT_EQ(res4.has_value(), true);
+  EXPECT_EQ(res4.value(), "WTF?");
 }
