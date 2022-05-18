@@ -157,3 +157,15 @@ TEST(MatchTest, RegMatchTest) {
   EXPECT_EQ(res3.has_value(), true);
   EXPECT_EQ(res3.value(), -1);
 }
+
+TEST(MatchTest, NoReturnTest) {
+  Matcher<int, void>::Match(2)
+      ->Case(1)([](){ EXPECT_EQ(true, false); })
+      ->Case(2)([](){ EXPECT_EQ(true, true); })
+      ->Case(3)([]() { EXPECT_EQ(true, false); });
+
+  Matcher<std::string, void, true>::Match("")
+      ->Case("[1-9]\\d{4,11}")([](const std::string& _){ EXPECT_EQ(true, false); })
+      ->Case("[\\w]+")([](const std::string& _){ EXPECT_EQ(true, false); })
+      ->CaseDefault()([](const std::string& _){ EXPECT_EQ(true, true); });
+}

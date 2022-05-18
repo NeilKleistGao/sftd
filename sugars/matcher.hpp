@@ -130,6 +130,101 @@ private:
   std::optional<ReturnType> m_result;
 };
 
+template<typename ParamType, bool Reg>
+class Matcher<ParamType, void, Reg> {
+private:
+  template <typename MatchType>
+  struct MatchResult {
+    bool matched = false;
+    Matcher* self = nullptr;
+    std::optional<MatchType> param;
+
+    using RefFunc = std::function<void(const MatchType&)>;
+    using PointerFunc = std::function<void(MatchType*)>;
+    using IgnoreFunc = std::function<void(void)>;
+
+    Matcher* operator()(const RefFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        p_func(param.value());
+      }
+
+      return self;
+    }
+
+    Matcher* operator()(const PointerFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        p_func(param.value());
+      }
+
+      return self;
+    }
+
+    Matcher* operator()(const IgnoreFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        p_func();
+      }
+
+      return self;
+    }
+  };
+
+public:
+  explicit Matcher(const ParamType& p_input) : m_input(p_input), m_matched(false) {
+  }
+
+  static std::unique_ptr<Matcher> Match(const ParamType& p_input) {
+    return std::make_unique<Matcher>(p_input);
+  }
+
+  ~Matcher() = default;
+  Matcher(const Matcher&) = delete;
+  Matcher& operator=(const Matcher&) = delete;
+  Matcher(Matcher&&) = delete;
+  Matcher& operator=(Matcher&&) = delete;
+
+  template <typename MatchType>
+  MatchResult<MatchType> Case() {
+    MatchResult<MatchType> result{};
+    auto temp = dynamic_cast<MatchType>(m_input);
+    result.matched = !m_matched && temp != nullptr;
+    if (result.matched) {
+      result.param = temp;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+  MatchResult<ParamType> Case(const ParamType& p_pattern) {
+    MatchResult<ParamType> result{};
+    result.matched = !m_matched && m_input == p_pattern;
+    if (result.matched) {
+      result.param = m_input;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+  MatchResult<ParamType> CaseDefault() {
+    MatchResult<ParamType> result{};
+    result.matched = !m_matched;
+    if (result.matched) {
+      result.param = m_input;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+private:
+  const ParamType& m_input;
+  bool m_matched;
+};
+
 template<typename ReturnType>
 class Matcher<std::string, ReturnType, true> {
 private:
@@ -206,6 +301,78 @@ private:
   bool m_matched;
 
   std::optional<ReturnType> m_result;
+};
+
+template<>
+class Matcher<std::string, void, true> {
+private:
+  struct MatchResult {
+    bool matched = false;
+    Matcher* self = nullptr;
+    std::optional<std::string> param;
+
+    using RefFunc = std::function<void(const std::string&)>;
+    using IgnoreFunc = std::function<void(void)>;
+
+    Matcher* operator()(const RefFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        p_func(param.value());
+      }
+
+      return self;
+    }
+
+    Matcher* operator()(const IgnoreFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        p_func();
+      }
+
+      return self;
+    }
+  };
+
+public:
+  explicit Matcher(const std::string& p_input) : m_input(p_input), m_matched(false) {
+  }
+
+  static std::unique_ptr<Matcher> Match(const std::string& p_input) {
+    return std::make_unique<Matcher>(p_input);
+  }
+
+  ~Matcher() = default;
+  Matcher(const Matcher&) = delete;
+  Matcher& operator=(const Matcher&) = delete;
+  Matcher(Matcher&&) = delete;
+  Matcher& operator=(Matcher&&) = delete;
+
+  MatchResult Case(const std::string& p_pattern) {
+    MatchResult result{};
+    std::regex reg{p_pattern};
+    result.matched = !m_matched && std::regex_match(m_input, reg);
+    if (result.matched) {
+      result.param = m_input;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+  MatchResult CaseDefault() {
+    MatchResult result{};
+    result.matched = !m_matched;
+    if (result.matched) {
+      result.param = m_input;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+private:
+  const std::string& m_input;
+  bool m_matched;
 };
 
 #endif // SFTD_MATCHER_HPP
