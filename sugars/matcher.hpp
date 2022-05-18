@@ -27,6 +27,7 @@
 #include <functional>
 #include <optional>
 #include <memory>
+#include <type_traits>
 
 template<typename ParamType, typename ReturnType>
 class Matcher {
@@ -37,7 +38,19 @@ private:
     Matcher* self = nullptr;
     std::optional<MatchType> param;
 
-    Matcher* operator()(const std::function<ReturnType(const MatchType&)>& p_func) {
+    using RefFunc = std::function<ReturnType(const MatchType&)>;
+    using PointerFunc = std::function<ReturnType(MatchType*)>;
+
+    Matcher* operator()(const RefFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        self->m_result = p_func(param.value());
+      }
+
+      return self;
+    }
+
+    Matcher* operator()(const PointerFunc& p_func) {
       if (matched) {
         self->m_matched = true;
         self->m_result = p_func(param.value());
@@ -60,6 +73,19 @@ public:
   Matcher& operator=(const Matcher&) = delete;
   Matcher(Matcher&&) = delete;
   Matcher& operator=(Matcher&&) = delete;
+
+  template <typename MatchType>
+  MatchResult<MatchType> Case() {
+    MatchResult<MatchType> result{};
+    auto temp = dynamic_cast<MatchType>(m_input);
+    result.matched = !m_matched && temp != nullptr;
+    if (result.matched) {
+      result.param = temp;
+    }
+
+    result.self = this;
+    return result;
+  }
 
   MatchResult<ParamType> Case(const ParamType& p_pattern) {
     MatchResult<ParamType> result{};

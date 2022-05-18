@@ -87,3 +87,47 @@ TEST(MatchTest, ValueMatchTest) {
   EXPECT_EQ(res4.has_value(), true);
   EXPECT_EQ(res4.value(), "WTF?");
 }
+
+class A {
+protected:
+  virtual void foo() {};
+};
+
+class B : public A{
+protected:
+  void foo() override {};
+};
+
+class C : public A{
+protected:
+  void foo() override {};
+};
+
+TEST(MatchTest, ClassMatchTest) {
+  auto* b = new B();
+  auto res1 = Matcher<A*, int>::Match(b)
+      ->Case<B*>()([](B* _){ return 1; })
+      ->Case<C*>()([](C* _){ return 2; })
+      ->CaseDefault()([](A* _){ return 0; })->Result();
+
+  EXPECT_EQ(res1.has_value(), true);
+  EXPECT_EQ(res1.value(), 1);
+
+  auto* c = new C();
+  auto res2 = Matcher<A*, int>::Match(c)
+      ->Case<B*>()([](B* _){ return 1; })
+      ->Case<C*>()([](C* _){ return 2; })
+      ->CaseDefault()([](A* _){ return 0; })->Result();
+
+  EXPECT_EQ(res2.has_value(), true);
+  EXPECT_EQ(res2.value(), 2);
+
+  auto* a = new A();
+  auto res3 = Matcher<A*, int>::Match(a)
+      ->Case<B*>()([](B* _){ return 1; })
+      ->Case<C*>()([](C* _){ return 2; })
+      ->CaseDefault()([](A* _){ return 0; })->Result();
+
+  EXPECT_EQ(res3.has_value(), true);
+  EXPECT_EQ(res3.value(), 0);
+}
