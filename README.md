@@ -12,78 +12,70 @@ Game Engine Support:
 ## Some Demos
 ### Create Character Information
 ```
-Character Motoko("kusanagi motoko") {
+Character "kusanagi motoko" {
     default {
-        avatar = "motoko.png"
-        font = default
-        sound = null
+        avatar: "motoko.png"
+        font: default
+        sound: null
     }
     
-    State happy {}
+    State happy {
+        // avatar: "motoko_happy.png"
+        // font: default
+        // sound: null
+    }
     State angry {
-        avatar = "motoko_angry_pic.png"
+        avatar: "motoko_angry_pic.png"
+        // font: default
+        // sound: null
     }
 }
 ```
 
 ### Create Effects
 ```
-Effect HighlightEffect : Text {
-    color = "#FF0000"
-    bold = true
+Effect HighlightEffect on Text {
+    color: "#FF0000"
+    bold: true
 }
 ```
 
 ### Dialogue
 ```
 #en-GB
-import chara.Motoko
-import chara.Tachikoma
-import effect.HighlightEffect
 
-func add() {
-    << "You are the " << $num << noflush
-    if ($num > 1) {
-        << "tachikomas!"
-    } 
-    else {
-        << "tachikoma!"
-    }
-    
-    $num = $num + 1
-    return "next."
+part intro {
+    [tachikoma]: "tachikoma desu!"
+    [kusanagi motoko]: "Hello! tachikoma number{$id}"
 }
 
-proc count() {
-    [Motoko]
-    << "Hello."
-    MoveTo(@Motoko, (1, 2))
-    while ($num < 10) {
-        << "What's your " << HighlightEffect("name") << "?"
-        select {
-            case "tachikoma": {
-                << add()
-            }
-            case "tachikoma": {
-                << add()
-            }
-            case "tachikoma": {
-                << add()
-            }
+part ask {
+    [kusanagi motoko]: {
+        "Hello."
+        @Motoko move_to (1, 2) in 2s
+        "What's your <use HighlightEffect>name<end> ?"
+    }
+    
+    select {
+        "tachikoma": {
+            goto intro
         }
+        "go away": {}
     }
     
-    group {
-        @Tachikoma1 << "Bye!"
-        Anim(@Tachikoma1, "bye")
-        @Tachikoma2 << "Bye!"
-        Anim(@Tachikoma2, "bye")
-        @Tachikoma3 << "Bye!"
-        Anim(@Tachikoma3, "bye")
+    [kusanagi motoko(confused)]: {
+        "Alright."
+    }
+    
+    if ($left) {
+        @Motoko move_to (0, 3) in 2s
+    }
+    else {
+        @Motoko move_to (2, 3) in 2s
     }
 }
 
-Event Greet {
-    goto count
+event Greet {
+    insert ask
 }
 ```
