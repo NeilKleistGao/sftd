@@ -19,33 +19,31 @@
 * SOFTWARE.
  */
 
-/// @file lex_parser.h
+/// @file singleton.hpp
 
-#ifndef SFTD_LEX_PARSER_H
-#define SFTD_LEX_PARSER_H
+#ifndef SFTD_SINGLETON_HPP
+#define SFTD_SINGLETON_HPP
 
-#include "token.h"
-
-class LexParser {
+template<typename Type>
+class Singleton {
 public:
-  LexParser(const char* p_buffer, unsigned int p_length);
-  ~LexParser() = default;
-
-  Token GetNext();
-
-  inline bool HasNext() const {
-    return m_current2 == m_end;
+  static Type* GetInstance() {
+    if (m_instance == nullptr) {
+      m_instance = new Type();
+    }
   }
 
-private:
-  const char* m_begin;
-  char* m_current1;
-  char* m_current2;
-  char* m_end;
+  static void DestroyInstance() {
+    if (m_instance) {
+      delete m_instance;
+      m_instance = nullptr;
+    }
+  }
+protected:
+  Singleton() = default;
+  ~Singleton() = default;
 
-  Token ParseString();
-  Token ParseNumber();
-  Token ParseOperator();
+  static Type* m_instance;
 };
 
-#endif // SFTD_LEX_PARSER_H
+#endif // SFTD_SINGLETON_HPP

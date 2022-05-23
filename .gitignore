@@ -36,3 +36,5 @@
 /bin
 
 CMakeCache.txt
+*_gen.h
+*_gen.cc

@@ -19,33 +19,11 @@
 * SOFTWARE.
  */
 
-/// @file lex_parser.h
+/// @file symbol_table.h
 
-#ifndef SFTD_LEX_PARSER_H
-#define SFTD_LEX_PARSER_H
+#ifndef SFTD_SYMBOL_TABLE_H
+#define SFTD_SYMBOL_TABLE_H
 
-#include "token.h"
 
-class LexParser {
-public:
-  LexParser(const char* p_buffer, unsigned int p_length);
-  ~LexParser() = default;
 
-  Token GetNext();
-
-  inline bool HasNext() const {
-    return m_current2 == m_end;
-  }
-
-private:
-  const char* m_begin;
-  char* m_current1;
-  char* m_current2;
-  char* m_end;
-
-  Token ParseString();
-  Token ParseNumber();
-  Token ParseOperator();
-};
-
-#endif // SFTD_LEX_PARSER_H
+#endif // SFTD_SYMBOL_TABLE_H

@@ -22,3 +22,71 @@
 /// @file lex_parser.cc
 
 #include "lex_parser.h"
+
+#include <cctype>
+#include <string>
+
+#include "tables/constant_table.h"
+
+LexParser::LexParser(const char* p_buffer, unsigned int p_length) : m_begin(p_buffer) {
+  m_current1 = m_current2 = const_cast<char*>(p_buffer);
+  m_end = const_cast<char*>(p_buffer + p_length);
+}
+
+Token LexParser::GetNext() {
+  while (HasNext() && std::isblank(*m_current2)) {
+    ++m_current2; ++m_current1;
+  }
+
+  if (HasNext() && *m_current2 == '/' && *(m_current2 + 1) == '/') {
+    while (HasNext() && *m_current2 != '\n') {
+      ++m_current2; ++m_current1;
+    }
+  }
+
+  if (!HasNext()) {
+    Token eof{};
+    eof.type = TokenType::TOKEN_EOF;
+    return eof;
+  }
+
+  if (*m_current2 == '*') {
+    return ParseString();
+  }
+  else if (std::isdigit(*m_current2)) {
+    return ParseNumber();
+  }
+  else {
+    return ParseOperator();
+  }
+}
+
+Token LexParser::ParseString() {
+  ++m_current2;
+  std::string str;
+  while (*m_current2 != '"') {
+    if (*m_current2 == '\\') {
+      ++m_current2;
+    }
+
+    str += *m_current2;
+    ++m_current2;
+  }
+
+  m_current1 = m_current2++;
+
+
+
+  Token token{};
+  token.type = TokenType::TOKEN_STRING;
+  token.value = ConstantTable::GetInstance()->Insert(str);
+  return token;
+}
+
+Token LexParser::ParseNumber() {
+
+}
+
+Token LexParser::ParseOperator() {
+
+}

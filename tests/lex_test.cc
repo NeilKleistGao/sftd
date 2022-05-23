@@ -19,33 +19,20 @@
 * SOFTWARE.
  */
 
-/// @file lex_parser.h
+/// @file lex_test.cc
 
-#ifndef SFTD_LEX_PARSER_H
-#define SFTD_LEX_PARSER_H
+#include <gtest/gtest.h>
 
-#include "token.h"
+#include "lex/lex_parser.h"
 
-class LexParser {
-public:
-  LexParser(const char* p_buffer, unsigned int p_length);
-  ~LexParser() = default;
+TEST(LexTest, CharacterTest) {
+  EXPECT_EQ(true, true);
+}
 
-  Token GetNext();
+TEST(LexTest, EffectTest) {
+  EXPECT_EQ(true, true);
+}
 
-  inline bool HasNext() const {
-    return m_current2 == m_end;
-  }
-
-private:
-  const char* m_begin;
-  char* m_current1;
-  char* m_current2;
-  char* m_end;
-
-  Token ParseString();
-  Token ParseNumber();
-  Token ParseOperator();
-};
-
-#endif // SFTD_LEX_PARSER_H
+TEST(LexTest, DialogueTest) {
+  EXPECT_EQ(true, true);
+}

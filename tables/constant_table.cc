@@ -19,33 +19,26 @@
 * SOFTWARE.
  */
 
-/// @file lex_parser.h
+/// @file constant_table.cc
 
-#ifndef SFTD_LEX_PARSER_H
-#define SFTD_LEX_PARSER_H
+#include "constant_table.h"
 
-#include "token.h"
+template<> ConstantTable* Singleton<ConstantTable>::m_instance = nullptr;
 
-class LexParser {
-public:
-  LexParser(const char* p_buffer, unsigned int p_length);
-  ~LexParser() = default;
-
-  Token GetNext();
-
-  inline bool HasNext() const {
-    return m_current2 == m_end;
+int ConstantTable::Insert(const std::string& p_str) {
+  if (m_visit.find(p_str) != m_visit.end()) {
+    return m_visit[p_str];
   }
 
-private:
-  const char* m_begin;
-  char* m_current1;
-  char* m_current2;
-  char* m_end;
+  int id = static_cast<int>(m_visit.size());
+  m_visit[p_str] = id;
+  m_table[id] = m_visit.find(p_str);
+}
 
-  Token ParseString();
-  Token ParseNumber();
-  Token ParseOperator();
-};
+std::string ConstantTable::Find(int p_id) {
+  if (m_table.find(p_id) != m_table.end()) {
+    return m_table[p_id]->first;
+  }
 
-#endif // SFTD_LEX_PARSER_H
+  return "";
+}

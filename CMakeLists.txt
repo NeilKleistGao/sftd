@@ -29,8 +29,10 @@ if (BUILD_TEST)
 endif()
 
 include(sugars/CMakeLists.txt)
+include(lex/CMakeLists.txt)
+include(tables/CMakeLists.txt)
 
-add_library(sftd SHARED main.cc ${SUGAR_HEADER} ${SUGAR_SRC})
+add_library(sftd SHARED main.cc ${SUGAR_HEADER} ${SUGAR_SRC} ${LEX_HEADER} ${LEX_SRC} ${TABLES_HEADER} ${TABLES_SRC})
 
 if (BUILD_TEST)
     file(GLOB test_files RELATIVE ${CMAKE_SOURCE_DIR}/tests ${CMAKE_SOURCE_DIR}/tests/*.cc)

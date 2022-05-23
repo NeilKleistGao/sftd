@@ -19,33 +19,27 @@
 * SOFTWARE.
  */
 
-/// @file lex_parser.h
+/// @file constant_table.h
 
-#ifndef SFTD_LEX_PARSER_H
-#define SFTD_LEX_PARSER_H
+#ifndef SFTD_CONSTANT_TABLE_H
+#define SFTD_CONSTANT_TABLE_H
 
-#include "token.h"
+#include "sugars/singleton.hpp"
 
-class LexParser {
+#include <unordered_map>
+
+class ConstantTable : public Singleton<ConstantTable> {
 public:
-  LexParser(const char* p_buffer, unsigned int p_length);
-  ~LexParser() = default;
+  int Insert(const std::string& p_str);
+  std::string Find(int p_id);
 
-  Token GetNext();
-
-  inline bool HasNext() const {
-    return m_current2 == m_end;
+  inline void Clear() {
+    m_table.clear(); m_visit.clear();
   }
-
 private:
-  const char* m_begin;
-  char* m_current1;
-  char* m_current2;
-  char* m_end;
-
-  Token ParseString();
-  Token ParseNumber();
-  Token ParseOperator();
+  std::unordered_map<std::string, int> m_visit;
+  using ConstantData = std::unordered_map<std::string, int>::const_iterator;
+  std::unordered_map<int, ConstantData> m_table;
 };
 
-#endif // SFTD_LEX_PARSER_H
+#endif // SFTD_CONSTANT_TABLE_H
