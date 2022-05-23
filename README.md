@@ -12,19 +12,19 @@ Game Engine Support:
 ## Some Demos
 ### Create Character Information
 ```
-Character "kusanagi motoko" {
+character "kusanagi motoko" {
     default {
         avatar: "motoko.png"
         font: default
         sound: null
     }
     
-    State happy {
+    state happy {
         // avatar: "motoko_happy.png"
         // font: default
         // sound: null
     }
-    State angry {
+    state angry {
         avatar: "motoko_angry_pic.png"
         // font: default
         // sound: null
@@ -34,7 +34,7 @@ Character "kusanagi motoko" {
 
 ### Create Effects
 ```
-Effect HighlightEffect on Text {
+effect HighlightEffect on Text {
     color: "#FF0000"
     bold: true
 }
@@ -52,7 +52,7 @@ part intro {
 part ask {
     [kusanagi motoko]: {
         "Hello."
-        @Motoko move_to (1, 2) in 2s
+        @Motoko moveto (1, 2) in 2s
         "What's your <use HighlightEffect>name<end> ?"
     }
     
@@ -68,10 +68,10 @@ part ask {
     }
     
     if ($left) {
-        @Motoko move_to (0, 3) in 2s
+        @Motoko moveto (0, 3) in 2s
     }
     else {
-        @Motoko move_to (2, 3) in 2s
+        @Motoko moveto (2, 3) in 2s
     }
 }
 
