@@ -50,9 +50,6 @@ enum class TokenType {
   TOKEN_DIV,
   TOKEN_MOD,
   TOKEN_EQUAL,
-  TOKEN_SHARP,
-  TOKEN_DOLLAR,
-  TOKEN_AT,
   TOKEN_LEFT_SQUARE,
   TOKEN_RIGHT_SQUARE,
   TOKEN_LEFT_PARENTHESES,
@@ -61,12 +58,22 @@ enum class TokenType {
   TOKEN_RIGHT_CURLY,
   TOKEN_STRING,
   TOKEN_FLOAT,
-  TOKEN_BOOL
+  TOKEN_INT,
+  TOKEN_BOOL,
+  TOKEN_DOLLAR,
+  TOKEN_SHARP,
+  TOKEN_AT,
+  TOKEN_LESS,
+  TOKEN_GREATER,
+  TOKEN_VARIABLE
 };
 
 struct Token {
   TokenType type;
   int value;
+
+  Token() = default;
+  explicit Token(TokenType p_type, int p_value = 0) : type(p_type), value(p_value) {}
 };
 
 #endif // SFTD_TOKEN_H

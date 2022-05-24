@@ -27,20 +27,41 @@
 #include <string>
 
 #include "tables/constant_table.h"
+#include "tables/symbol_table.h"
 
-LexParser::LexParser(const char* p_buffer, unsigned int p_length) : m_begin(p_buffer) {
-  m_current1 = m_current2 = const_cast<char*>(p_buffer);
+LexParser::LexParser(const char* p_buffer, unsigned int p_length) {
+  m_current = const_cast<char*>(p_buffer);
   m_end = const_cast<char*>(p_buffer + p_length);
+
+  m_keywords.insert(std::make_pair("part", Token{TokenType::TOKEN_PART}));
+  m_keywords.insert(std::make_pair("event", Token{TokenType::TOKEN_EVENT}));
+  m_keywords.insert(std::make_pair("select", Token{TokenType::TOKEN_SELECT}));
+  m_keywords.insert(std::make_pair("if", Token{TokenType::TOKEN_IF}));
+  m_keywords.insert(std::make_pair("else", Token{TokenType::TOKEN_ELSE}));
+  m_keywords.insert(std::make_pair("goto", Token{TokenType::TOKEN_GOTO}));
+  m_keywords.insert(std::make_pair("insert", Token{TokenType::TOKEN_INSERT}));
+  m_keywords.insert(std::make_pair("character", Token{TokenType::TOKEN_CHARACTER}));
+  m_keywords.insert(std::make_pair("default", Token{TokenType::TOKEN_DEFAULT}));
+  m_keywords.insert(std::make_pair("state", Token{TokenType::TOKEN_STATE}));
+  m_keywords.insert(std::make_pair("effect", Token{TokenType::TOKEN_EFFECT}));
+  m_keywords.insert(std::make_pair("on", Token{TokenType::TOKEN_ON}));
+  m_keywords.insert(std::make_pair("in", Token{TokenType::TOKEN_IN}));
+  m_keywords.insert(std::make_pair("null", Token{TokenType::TOKEN_NULL}));
+  m_keywords.insert(std::make_pair("and", Token{TokenType::TOKEN_AND}));
+  m_keywords.insert(std::make_pair("or", Token{TokenType::TOKEN_OR}));
+  m_keywords.insert(std::make_pair("not", Token{TokenType::TOKEN_NOT}));
+  m_keywords.insert(std::make_pair("true", Token{TokenType::TOKEN_BOOL, 1}));
+  m_keywords.insert(std::make_pair("false", Token{TokenType::TOKEN_BOOL, 0}));
 }
 
 Token LexParser::GetNext() {
-  while (HasNext() && std::isblank(*m_current2)) {
-    ++m_current2; ++m_current1;
+  while (HasNext() && std::isblank(*m_current)) {
+    ++m_current;
   }
 
-  if (HasNext() && *m_current2 == '/' && *(m_current2 + 1) == '/') {
-    while (HasNext() && *m_current2 != '\n') {
-      ++m_current2; ++m_current1;
+  if (HasNext() && *m_current == '/' && *(m_current + 1) == '/') {
+    while (HasNext() && *m_current != '\n') {
+      ++m_current;
     }
   }
 
@@ -50,11 +71,14 @@ Token LexParser::GetNext() {
     return eof;
   }
 
-  if (*m_current2 == '*') {
+  if (*m_current == '"') {
     return ParseString();
   }
-  else if (std::isdigit(*m_current2)) {
+  else if (std::isdigit(*m_current)) {
     return ParseNumber();
+  }
+  else if (std::isalpha(*m_current)) {
+    return ParseKeywords();
   }
   else {
     return ParseOperator();
@@ -62,31 +86,145 @@ Token LexParser::GetNext() {
 }
 
 Token LexParser::ParseString() {
-  ++m_current2;
+  ++m_current;
   std::string str;
-  while (*m_current2 != '"') {
-    if (*m_current2 == '\\') {
-      ++m_current2;
+  while (HasNext() && *m_current != '"' && *m_current != '\n') {
+    if (*m_current == '\\') {
+      ++m_current;
+      if (!HasNext()) {
+        throw std::exception{};
+      }
+
+      if (*m_current == 'n') {
+        str += '\n';
+        continue;
+      }
+      else if (*m_current == 't') {
+        str += '\t';
+        continue;
+      }
     }
 
-    str += *m_current2;
-    ++m_current2;
+    str += *m_current;
+    ++m_current;
   }
 
-  m_current1 = m_current2++;
-
-
-
-  Token token{};
-  token.type = TokenType::TOKEN_STRING;
-  token.value = ConstantTable::GetInstance()->Insert(str);
-  return token;
+  return Token{TokenType::TOKEN_STRING, ConstantTable::GetInstance()->Insert(str)};
 }
 
 Token LexParser::ParseNumber() {
+  int i = 0; float f = 0.0f, scale = 1.0f;
+  bool is_float = false;
+  while (HasNext() && (std::isdigit(*m_current) || *m_current == '.')) {
+    if (*m_current == '.') {
+      if (is_float) {
+        throw std::exception{};
+      }
+      is_float = true;
+      f = static_cast<float>(i);
+    }
+    else {
+      if (is_float) {
+        scale *= 0.1f;
+        f += static_cast<float>((*m_current) - '0') * scale;
+      }
+      else {
+        i *= 10; i += static_cast<int>((*m_current) - '0');
+      }
+    }
 
+    ++m_current;
+  }
+
+  if (is_float) {
+    union {
+      int output; float input;
+    } converter{};
+    converter.input = f;
+    return Token{TokenType::TOKEN_FLOAT, converter.output};
+  }
+  else {
+    return Token{TokenType::TOKEN_INT, i};
+  }
 }
 
 Token LexParser::ParseOperator() {
+  Token token{};
+  switch (*m_current) {
+  case ':':
+    token.type = TokenType::TOKEN_COLON;
+    break;
+  case '+':
+    token.type = TokenType::TOKEN_ADD;
+    break;
+  case '-':
+    token.type = TokenType::TOKEN_SUB;
+    break;
+  case '*':
+    token.type = TokenType::TOKEN_MUL;
+    break;
+  case '/':
+    token.type = TokenType::TOKEN_DIV;
+    break;
+  case '%':
+    token.type = TokenType::TOKEN_MOD;
+    break;
+  case '=':
+    token.type = TokenType::TOKEN_EQUAL;
+    break;
+  case '[':
+    token.type = TokenType::TOKEN_LEFT_SQUARE;
+    break;
+  case ']':
+    token.type = TokenType::TOKEN_RIGHT_SQUARE;
+    break;
+  case '(':
+    token.type = TokenType::TOKEN_LEFT_PARENTHESES;
+    break;
+  case ')':
+    token.type = TokenType::TOKEN_RIGHT_PARENTHESES;
+    break;
+  case '{':
+    token.type = TokenType::TOKEN_LEFT_CURLY;
+    break;
+  case '}':
+    token.type = TokenType::TOKEN_RIGHT_CURLY;
+    break;
+  case '<':
+    token.type = TokenType::TOKEN_LESS;
+    break;
+  case '>':
+    token.type = TokenType::TOKEN_GREATER;
+    break;
+  case '$':
+    token.type = TokenType::TOKEN_DOLLAR;
+    break;
+  case '@':
+    token.type = TokenType::TOKEN_AT;
+    break;
+  case '#':
+    token.type = TokenType::TOKEN_SHARP;
+    break;
+  default:
+    throw std::exception{};
+  }
 
+  ++m_current;
+  return token;
 }
+
+Token LexParser::ParseKeywords() {
+  std::string keyword;
+  while (HasNext() && (std::isalpha(*m_current) || *m_current == '_')) {
+    keyword += *m_current;
+    ++m_current;
+  }
+
+  if (m_keywords.find(keyword) != m_keywords.end()) {
+    return m_keywords[keyword];
+  }
+  else {
+    return Token{TokenType::TOKEN_VARIABLE, SymbolTable::GetInstance()->Insert(keyword)};
+  }
+}
+

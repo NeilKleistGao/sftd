@@ -24,6 +24,19 @@
 #ifndef SFTD_SYMBOL_TABLE_H
 #define SFTD_SYMBOL_TABLE_H
 
+#include <unordered_map>
 
+#include "sugars/singleton.hpp"
+
+
+class SymbolTable : public Singleton<SymbolTable> {
+public:
+  int Insert(const std::string& p_str);
+
+private:
+  std::unordered_map<std::string, int> m_visit;
+  using ConstantData = std::unordered_map<std::string, int>::const_iterator;
+  std::unordered_map<int, ConstantData> m_table;
+};
 
 #endif // SFTD_SYMBOL_TABLE_H

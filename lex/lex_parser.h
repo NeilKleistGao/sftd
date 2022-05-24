@@ -24,6 +24,8 @@
 #ifndef SFTD_LEX_PARSER_H
 #define SFTD_LEX_PARSER_H
 
+#include <unordered_map>
+
 #include "token.h"
 
 class LexParser {
@@ -34,18 +36,19 @@ public:
   Token GetNext();
 
   inline bool HasNext() const {
-    return m_current2 == m_end;
+    return m_current == m_end;
   }
 
 private:
-  const char* m_begin;
-  char* m_current1;
-  char* m_current2;
+  char* m_current;
   char* m_end;
+
+  std::unordered_map<std::string, Token> m_keywords;
 
   Token ParseString();
   Token ParseNumber();
   Token ParseOperator();
+  Token ParseKeywords();
 };
 
 #endif // SFTD_LEX_PARSER_H
