@@ -36,7 +36,6 @@ character kusanagi_motoko {
 ```
 effect highlight on Text {
     color: "#FF0000"
-    bold: true
 }
 ```
 

@@ -65,7 +65,11 @@ enum class TokenType {
   TOKEN_AT,
   TOKEN_LESS,
   TOKEN_GREATER,
-  TOKEN_VARIABLE
+  TOKEN_VARIABLE,
+  TOKEN_AVATAR,
+  TOKEN_FONT,
+  TOKEN_SOUND,
+  TOKEN_COLOR
 };
 
 struct Token {

@@ -19,6 +19,10 @@
 - not
 - true
 - false
+- avatar
+- font
+- sound
+- color
 
 ## Operators
 - `:`

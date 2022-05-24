@@ -52,6 +52,10 @@ LexParser::LexParser(const char* p_buffer, unsigned long p_length) {
   m_keywords.insert(std::make_pair("not", Token{TokenType::TOKEN_NOT}));
   m_keywords.insert(std::make_pair("true", Token{TokenType::TOKEN_BOOL, 1}));
   m_keywords.insert(std::make_pair("false", Token{TokenType::TOKEN_BOOL, 0}));
+  m_keywords.insert(std::make_pair("avatar", Token{TokenType::TOKEN_AVATAR}));
+  m_keywords.insert(std::make_pair("font", Token{TokenType::TOKEN_FONT}));
+  m_keywords.insert(std::make_pair("sound", Token{TokenType::TOKEN_SOUND}));
+  m_keywords.insert(std::make_pair("color", Token{TokenType::TOKEN_COLOR}));
 }
 
 Token LexParser::GetNext() {
