@@ -33,6 +33,9 @@ class SymbolTable : public Singleton<SymbolTable> {
 public:
   int Insert(const std::string& p_str);
 
+  inline void Clear() {
+    m_table.clear(); m_visit.clear();
+  }
 private:
   std::unordered_map<std::string, int> m_visit;
   using SymbolData = std::unordered_map<std::string, int>::const_iterator;

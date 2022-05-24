@@ -25,6 +25,8 @@
 #include <cstring>
 
 #include "lex/lex_parser.h"
+#include "tables/constant_table.h"
+#include "tables/symbol_table.h"
 
 TEST(LexTest, CharacterTest) {
   const char* CHARACTER_FILE = "character kusanagi_motoko {\n"
@@ -46,6 +48,9 @@ TEST(LexTest, CharacterTest) {
                                "    }\n"
                                "}";
 
+
+  ConstantTable::GetInstance()->Clear();
+  SymbolTable::GetInstance()->Clear();
   LexParser parser{CHARACTER_FILE, std::strlen(CHARACTER_FILE)};
 
   EXPECT_EQ(parser.HasNext(), true);
@@ -167,7 +172,11 @@ TEST(LexTest, CharacterTest) {
 }
 
 TEST(LexTest, EffectTest) {
-  EXPECT_EQ(true, true);
+  const char* EFFECT_FILE = "effect highlight on Text {\n"
+                               "    color: \"#FF0000\"\n"
+                               "}";
+
+  LexParser parser{EFFECT_FILE, std::strlen(EFFECT_FILE)};
 }
 
 TEST(LexTest, DialogueTest) {
