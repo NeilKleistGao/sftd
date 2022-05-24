@@ -49,6 +49,13 @@ TEST(LexTest, CharacterTest) {
   LexParser parser{CHARACTER_FILE, std::strlen(CHARACTER_FILE)};
 
   EXPECT_EQ(parser.HasNext(), true);
+  auto token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_CHARACTER);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_VARIABLE);
+  EXPECT_EQ(token.value, 0);
 }
 
 TEST(LexTest, EffectTest) {

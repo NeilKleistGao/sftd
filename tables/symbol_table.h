@@ -35,8 +35,8 @@ public:
 
 private:
   std::unordered_map<std::string, int> m_visit;
-  using ConstantData = std::unordered_map<std::string, int>::const_iterator;
-  std::unordered_map<int, ConstantData> m_table;
+  using SymbolData = std::unordered_map<std::string, int>::const_iterator;
+  std::unordered_map<int, SymbolData> m_table;
 };
 
 #endif // SFTD_SYMBOL_TABLE_H

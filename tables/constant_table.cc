@@ -33,6 +33,8 @@ int ConstantTable::Insert(const std::string& p_str) {
   int id = static_cast<int>(m_visit.size());
   m_visit[p_str] = id;
   m_table[id] = m_visit.find(p_str);
+
+  return id;
 }
 
 std::string ConstantTable::Find(int p_id) {
