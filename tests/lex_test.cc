@@ -68,6 +68,43 @@ TEST(LexTest, CharacterTest) {
   EXPECT_EQ(parser.HasNext(), true);
   token = parser.GetNext();
   EXPECT_EQ(token.type, TokenType::TOKEN_LEFT_CURLY);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_AVATAR);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_COLON);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_STRING);
+  EXPECT_EQ(token.value, 0);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_FONT);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_COLON);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_DEFAULT);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_SOUND);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_COLON);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_NULL);
 }
 
 TEST(LexTest, EffectTest) {

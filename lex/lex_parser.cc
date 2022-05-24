@@ -113,6 +113,7 @@ Token LexParser::ParseString() {
     ++m_current;
   }
 
+  ++m_current;
   return Token{TokenType::TOKEN_STRING, ConstantTable::GetInstance()->Insert(str)};
 }
 
