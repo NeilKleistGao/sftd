@@ -41,7 +41,7 @@ effect highlight on Text {
 
 ### Dialogue
 ```
-#en-GB
+#enGB
 
 part intro {
     [tachikoma]: "tachikoma desu!"

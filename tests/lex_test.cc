@@ -224,7 +224,50 @@ TEST(LexTest, EffectTest) {
 }
 
 TEST(LexTest, DialogueTest) {
-  EXPECT_EQ(true, true);
+  const char* DIALOGUE_FILE = "#en-GB\n"
+                              "\n"
+                              "part intro {\n"
+                              "    [tachikoma]: \"tachikoma desu!\"\n"
+                              "    [kusanagi motoko]: \"Hello! tachikoma number{$id}\"\n"
+                              "}\n"
+                              "\n"
+                              "part ask {\n"
+                              "    [kusanagi_motoko]: {\n"
+                              "        \"Hello.\"\n"
+                              "        @Motoko moveto (1, 2) in 2s\n"
+                              "        \"What's your <highlight>name</> ?\"\n"
+                              "    }\n"
+                              "    \n"
+                              "    select {\n"
+                              "        \"tachikoma\": {\n"
+                              "            goto intro\n"
+                              "        }\n"
+                              "        \"go away\": {}\n"
+                              "    }\n"
+                              "    \n"
+                              "    [kusanagi_motoko(confused)]: {\n"
+                              "        \"Alright.\"\n"
+                              "    }\n"
+                              "    \n"
+                              "    if ($left) {\n"
+                              "        @Motoko moveto (0, 3) in 2s\n"
+                              "    }\n"
+                              "    else {\n"
+                              "        @Motoko moveto (2, 3) in 2s\n"
+                              "    }\n"
+                              "}\n"
+                              "\n"
+                              "event Greet {\n"
+                              "    insert ask\n"
+                              "}";
+
+  ConstantTable::GetInstance()->Clear();
+  SymbolTable::GetInstance()->Clear();
+  LexParser parser{DIALOGUE_FILE, std::strlen(DIALOGUE_FILE)};
+
+  EXPECT_EQ(parser.HasNext(), true);
+  auto token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_SHARP);
 }
 
 TEST(LexTest, ErrorTest) {
