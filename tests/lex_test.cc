@@ -184,9 +184,43 @@ TEST(LexTest, EffectTest) {
   auto token = parser.GetNext();
   EXPECT_EQ(token.type, TokenType::TOKEN_EFFECT);
 
-//  EXPECT_EQ(parser.HasNext(), true);
-//  token = parser.GetNext();
-//  EXPECT_EQ(token.type, TokenType::TOKEN_ON);
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_VARIABLE);
+  EXPECT_EQ(token.value, 0);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_ON);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_TEXT);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_LEFT_CURLY);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_COLOR);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_COLON);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_STRING);
+  EXPECT_EQ(token.value, 0);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_RIGHT_CURLY);
+
+  EXPECT_EQ(parser.HasNext(), false);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_EOF);
 }
 
 TEST(LexTest, DialogueTest) {
