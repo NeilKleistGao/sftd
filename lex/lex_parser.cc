@@ -63,8 +63,13 @@ Token LexParser::GetNext() {
     ++m_current;
   }
 
-  if (HasNext() && *m_current == '/' && *(m_current + 1) == '/') {
+  while (HasNext() && *m_current == '/' && *(m_current + 1) == '/') {
     while (HasNext() && *m_current != '\n') {
+      ++m_current;
+    }
+
+    ++m_current;
+    while (HasNext() && std::isspace(*m_current)) {
       ++m_current;
     }
   }
