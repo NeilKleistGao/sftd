@@ -22,11 +22,33 @@
 /// @file lex_test.cc
 
 #include <gtest/gtest.h>
+#include <cstring>
 
 #include "lex/lex_parser.h"
 
 TEST(LexTest, CharacterTest) {
-  EXPECT_EQ(true, true);
+  const char* CHARACTER_FILE = "character kusanagi_motoko {\n"
+                               "    default {\n"
+                               "        avatar: \"motoko.png\"\n"
+                               "        font: default\n"
+                               "        sound: null\n"
+                               "    }\n"
+                               "    \n"
+                               "    state happy {\n"
+                               "        // avatar: \"motoko_happy.png\"\n"
+                               "        // font: default\n"
+                               "        // sound: null\n"
+                               "    }\n"
+                               "    state angry {\n"
+                               "        avatar: \"motoko_angry_pic.png\"\n"
+                               "        // font: default\n"
+                               "        // sound: null\n"
+                               "    }\n"
+                               "}";
+
+  LexParser parser{CHARACTER_FILE, std::strlen(CHARACTER_FILE)};
+
+  EXPECT_EQ(parser.HasNext(), true);
 }
 
 TEST(LexTest, EffectTest) {
@@ -34,5 +56,9 @@ TEST(LexTest, EffectTest) {
 }
 
 TEST(LexTest, DialogueTest) {
+  EXPECT_EQ(true, true);
+}
+
+TEST(LexTest, ErrorTest) {
   EXPECT_EQ(true, true);
 }

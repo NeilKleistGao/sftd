@@ -30,13 +30,13 @@
 
 class LexParser {
 public:
-  LexParser(const char* p_buffer, unsigned int p_length);
+  LexParser(const char* p_buffer, unsigned long p_length);
   ~LexParser() = default;
 
   Token GetNext();
 
   inline bool HasNext() const {
-    return m_current == m_end;
+    return m_current != m_end;
   }
 
 private:

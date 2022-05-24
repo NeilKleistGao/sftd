@@ -29,7 +29,7 @@
 #include "tables/constant_table.h"
 #include "tables/symbol_table.h"
 
-LexParser::LexParser(const char* p_buffer, unsigned int p_length) {
+LexParser::LexParser(const char* p_buffer, unsigned long p_length) {
   m_current = const_cast<char*>(p_buffer);
   m_end = const_cast<char*>(p_buffer + p_length);
 

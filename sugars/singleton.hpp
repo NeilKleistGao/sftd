@@ -31,6 +31,8 @@ public:
     if (m_instance == nullptr) {
       m_instance = new Type();
     }
+
+    return m_instance;
   }
 
   static void DestroyInstance() {
