@@ -55,7 +55,7 @@ LexParser::LexParser(const char* p_buffer, unsigned long p_length) {
 }
 
 Token LexParser::GetNext() {
-  while (HasNext() && std::isblank(*m_current)) {
+  while (HasNext() && std::isspace(*m_current)) {
     ++m_current;
   }
 

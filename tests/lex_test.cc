@@ -56,6 +56,18 @@ TEST(LexTest, CharacterTest) {
   token = parser.GetNext();
   EXPECT_EQ(token.type, TokenType::TOKEN_VARIABLE);
   EXPECT_EQ(token.value, 0);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_LEFT_CURLY);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_DEFAULT);
+
+  EXPECT_EQ(parser.HasNext(), true);
+  token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_LEFT_CURLY);
 }
 
 TEST(LexTest, EffectTest) {
