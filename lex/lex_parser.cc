@@ -56,6 +56,7 @@ LexParser::LexParser(const char* p_buffer, unsigned long p_length) {
   m_keywords.insert(std::make_pair("font", Token{TokenType::TOKEN_FONT}));
   m_keywords.insert(std::make_pair("sound", Token{TokenType::TOKEN_SOUND}));
   m_keywords.insert(std::make_pair("color", Token{TokenType::TOKEN_COLOR}));
+  m_keywords.insert(std::make_pair("Text", Token{TokenType::TOKEN_TEXT}));
 }
 
 Token LexParser::GetNext() {

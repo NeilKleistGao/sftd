@@ -176,7 +176,17 @@ TEST(LexTest, EffectTest) {
                                "    color: \"#FF0000\"\n"
                                "}";
 
+  ConstantTable::GetInstance()->Clear();
+  SymbolTable::GetInstance()->Clear();
   LexParser parser{EFFECT_FILE, std::strlen(EFFECT_FILE)};
+
+  EXPECT_EQ(parser.HasNext(), true);
+  auto token = parser.GetNext();
+  EXPECT_EQ(token.type, TokenType::TOKEN_EFFECT);
+
+//  EXPECT_EQ(parser.HasNext(), true);
+//  token = parser.GetNext();
+//  EXPECT_EQ(token.type, TokenType::TOKEN_ON);
 }
 
 TEST(LexTest, DialogueTest) {
