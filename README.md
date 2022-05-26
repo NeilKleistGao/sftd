@@ -56,15 +56,11 @@ part ask {
     }
     
     select {
-        "tachikoma": {
-            goto intro
-        }
-        "go away": {}
+        "tachikoma": goto intro
+        "go away"
     }
     
-    [kusanagi_motoko(confused)]: {
-        "Alright."
-    }
+    [kusanagi_motoko(confused)]: "Alright."
     
     if ($left) {
         @Motoko moveto (0, 3) in 2

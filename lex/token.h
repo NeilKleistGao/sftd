@@ -71,12 +71,13 @@ enum class TokenType {
   TOKEN_SOUND,
   TOKEN_COLOR,
   TOKEN_TEXT,
-  TOKEN_COMMA
+  TOKEN_COMMA,
+  TOKEN_MOVETO
 };
 
 struct Token {
-  TokenType type;
-  int value;
+  TokenType type{};
+  int value{};
 
   Token() = default;
   explicit Token(TokenType p_type, int p_value = 0) : type(p_type), value(p_value) {}

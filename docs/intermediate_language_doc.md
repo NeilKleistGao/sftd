@@ -27,7 +27,6 @@ suffix: `.character` -> `.chara` (Character)
 suffix: `.dialogue` -> `.dd` (Dialogue Data)
 - Magic number: 2 Bytes
 - Default language code: 4 Bytes
-- The number op dependent files: 4 Bytes
 - Intern Symbol Table (Symbol Name, Address)
 - Extern Symbol Table (Symbol Name, Filename)
 - The number of parts: 4 Bytes

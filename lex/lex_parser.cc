@@ -57,6 +57,7 @@ LexParser::LexParser(const char* p_buffer, unsigned long p_length) {
   m_keywords.insert(std::make_pair("sound", Token{TokenType::TOKEN_SOUND}));
   m_keywords.insert(std::make_pair("color", Token{TokenType::TOKEN_COLOR}));
   m_keywords.insert(std::make_pair("Text", Token{TokenType::TOKEN_TEXT}));
+  m_keywords.insert(std::make_pair("moveto", Token{TokenType::TOKEN_MOVETO}));
 }
 
 Token LexParser::GetNext() {
@@ -98,6 +99,7 @@ Token LexParser::GetNext() {
 Token LexParser::ParseString() {
   ++m_current;
   std::string str;
+  Token token {TokenType::TOKEN_STRING};
   while (HasNext() && *m_current != '"' && *m_current != '\n') {
     if (*m_current == '\\') {
       ++m_current;
@@ -120,7 +122,8 @@ Token LexParser::ParseString() {
   }
 
   ++m_current;
-  return Token{TokenType::TOKEN_STRING, ConstantTable::GetInstance()->Insert(str)};
+  token.value = ConstantTable::GetInstance()->Insert(str);
+  return token;
 }
 
 Token LexParser::ParseNumber() {
