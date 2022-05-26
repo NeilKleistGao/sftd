@@ -23,6 +23,7 @@
 
 #include <gtest/gtest.h>
 #include <cstring>
+#include <iostream>
 
 #include "lex/lex_parser.h"
 #include "tables/constant_table.h"
@@ -682,6 +683,21 @@ TEST(LexTest, ErrorTest) {
     EXPECT_EQ(true, false);
   }
   catch (const UnexpectedEndOfString& e) {
+    std::cout << e.what() << std::endl;
     EXPECT_EQ(std::strcmp("Line 3: unexpected EOF.", e.what()), 0);
+  }
+
+  const char* NO_ENDING = "\"abcdefg";
+
+  ConstantTable::GetInstance()->Clear();
+  SymbolTable::GetInstance()->Clear();
+  try {
+    LexParser parser{NO_ENDING, std::strlen(NO_ENDING)};
+    auto token = parser.GetNext();
+    EXPECT_EQ(true, false);
+  }
+  catch (const UnexpectedEndOfString& e) {
+    std::cout << e.what() << std::endl;
+    EXPECT_EQ(std::strcmp("Line 1: unexpected EOF.", e.what()), 0);
   }
 }

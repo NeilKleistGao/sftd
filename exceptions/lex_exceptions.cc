@@ -25,17 +25,16 @@
 
 #include <string>
 
-const char *UnexpectedEndOfString::what() const noexcept {
-  static std::string msg = "Line " + std::to_string(m_line) + ": unexpected EOF.";
-  return msg.c_str();
+UnexpectedEndOfString::UnexpectedEndOfString(int p_line)
+    : BasicException(p_line) {
+  m_msg = "Line " + std::to_string(m_line) + ": unexpected EOF.";
 }
 
-const char *WrongNumber::what() const noexcept {
-  static std::string msg = "Line " + std::to_string(m_line) + ": wrong number expression.";
-  return msg.c_str();
+WrongNumber::WrongNumber(int p_line) : BasicException(p_line) {
+  m_msg = "Line " + std::to_string(m_line) + ": wrong number expression.";
 }
 
-const char *UnknownNotion::what() const noexcept {
-  static std::string msg = "Line " + std::to_string(m_line) + ": unknown notion " + m_notion;
-  return msg.c_str();
+UnknownNotion::UnknownNotion(int p_line, char p_notion)
+    : BasicException(p_line), m_notion(p_notion) {
+  m_msg = "Line " + std::to_string(m_line) + ": unknown notion " + m_notion;
 }

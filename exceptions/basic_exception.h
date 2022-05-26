@@ -30,9 +30,10 @@
 class BasicException : public std::exception {
 public:
   explicit BasicException(int p_line) : m_line(p_line) {}
-  [[nodiscard]] const char* what() const noexcept override = 0;
+  [[nodiscard]] const char* what() const noexcept override { return m_msg.c_str(); };
 protected:
   int m_line;
+  std::string m_msg;
 };
 
 #endif // SFTD_BASIC_EXCEPTION_H

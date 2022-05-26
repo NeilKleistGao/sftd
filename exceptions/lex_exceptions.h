@@ -26,22 +26,19 @@
 
 #include "basic_exception.h"
 
-class UnexpectedEndOfString : public BasicException{
+class UnexpectedEndOfString : public BasicException {
 public:
-  explicit UnexpectedEndOfString(int p_line) : BasicException(p_line) {}
-  [[nodiscard]] const char* what() const noexcept override;
+  explicit UnexpectedEndOfString(int p_line);
 };
 
-class WrongNumber : public BasicException{
+class WrongNumber : public BasicException {
 public:
-  explicit WrongNumber(int p_line) : BasicException(p_line) {}
-  [[nodiscard]] const char* what() const noexcept override;
+  explicit WrongNumber(int p_line);
 };
 
-class UnknownNotion : public BasicException{
+class UnknownNotion : public BasicException {
 public:
-  UnknownNotion(int p_line, char p_notion) : BasicException(p_line), m_notion(p_notion) {}
-  [[nodiscard]] const char* what() const noexcept override;
+  UnknownNotion(int p_line, char p_notion);
 
 private:
   char m_notion;
