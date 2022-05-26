@@ -70,7 +70,8 @@ enum class TokenType {
   TOKEN_FONT,
   TOKEN_SOUND,
   TOKEN_COLOR,
-  TOKEN_TEXT
+  TOKEN_TEXT,
+  TOKEN_COMMA
 };
 
 struct Token {

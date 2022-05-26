@@ -41,17 +41,17 @@ effect highlight on Text {
 
 ### Dialogue
 ```
-#enGB
+#{"en-GB", "zh-CN"}
 
 part intro {
     [tachikoma]: "tachikoma desu!"
-    [kusanagi motoko]: "Hello! tachikoma number{$id}"
+    [kusanagi_motoko]: "Hello! tachikoma number{$id}"
 }
 
 part ask {
     [kusanagi_motoko]: {
         "Hello."
-        @Motoko moveto (1, 2) in 2s
+        @Motoko moveto (1, 2) in 2
         "What's your <highlight>name</> ?"
     }
     
@@ -67,10 +67,10 @@ part ask {
     }
     
     if ($left) {
-        @Motoko moveto (0, 3) in 2s
+        @Motoko moveto (0, 3) in 2
     }
     else {
-        @Motoko moveto (2, 3) in 2s
+        @Motoko moveto (2, 3) in 2
     }
 }
 

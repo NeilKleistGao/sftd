@@ -216,6 +216,9 @@ Token LexParser::ParseOperator() {
   case '#':
     token.type = TokenType::TOKEN_SHARP;
     break;
+  case ',':
+    token.type = TokenType::TOKEN_COMMA;
+    break;
   default:
     throw std::exception{};
   }
