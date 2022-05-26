@@ -700,4 +700,32 @@ TEST(LexTest, ErrorTest) {
     std::cout << e.what() << std::endl;
     EXPECT_EQ(std::strcmp("Line 1: unexpected EOF.", e.what()), 0);
   }
+
+  const char* MANY_DOTS = "\n114.514.1919.810";
+
+  ConstantTable::GetInstance()->Clear();
+  SymbolTable::GetInstance()->Clear();
+  try {
+    LexParser parser{MANY_DOTS, std::strlen(MANY_DOTS)};
+    auto token = parser.GetNext();
+    EXPECT_EQ(true, false);
+  }
+  catch (const WrongNumber& e) {
+    std::cout << e.what() << std::endl;
+    EXPECT_EQ(std::strcmp("Line 2: wrong number expression.", e.what()), 0);
+  }
+
+  const char* WOW = "!";
+
+  ConstantTable::GetInstance()->Clear();
+  SymbolTable::GetInstance()->Clear();
+  try {
+    LexParser parser{WOW, std::strlen(WOW)};
+    auto token = parser.GetNext();
+    EXPECT_EQ(true, false);
+  }
+  catch (const UnknownNotion& e) {
+    std::cout << e.what() << std::endl;
+    EXPECT_EQ(std::strcmp("Line 1: unknown notion !", e.what()), 0);
+  }
 }
