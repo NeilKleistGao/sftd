@@ -28,8 +28,9 @@
 
 #include "tables/constant_table.h"
 #include "tables/symbol_table.h"
+#include "exceptions/lex_exceptions.h"
 
-LexParser::LexParser(const char* p_buffer, unsigned long p_length) {
+LexParser::LexParser(const char* p_buffer, unsigned long p_length) : m_line(1) {
   m_current = const_cast<char*>(p_buffer);
   m_end = const_cast<char*>(p_buffer + p_length);
 
@@ -62,6 +63,9 @@ LexParser::LexParser(const char* p_buffer, unsigned long p_length) {
 
 Token LexParser::GetNext() {
   while (HasNext() && std::isspace(*m_current)) {
+    if (*m_current == '\n') {
+      ++m_line;
+    }
     ++m_current;
   }
 
@@ -70,8 +74,11 @@ Token LexParser::GetNext() {
       ++m_current;
     }
 
-    ++m_current;
+    ++m_current; ++m_line;
     while (HasNext() && std::isspace(*m_current)) {
+      if (*m_current == '\n') {
+        ++m_line;
+      }
       ++m_current;
     }
   }
@@ -104,7 +111,7 @@ Token LexParser::ParseString() {
     if (*m_current == '\\') {
       ++m_current;
       if (!HasNext()) {
-        throw std::exception{};
+        throw UnexpectedEndOfString{m_line};
       }
 
       if (*m_current == 'n') {
@@ -121,6 +128,10 @@ Token LexParser::ParseString() {
     ++m_current;
   }
 
+  if (*m_current != '"') {
+    throw UnexpectedEndOfString{m_line};
+  }
+
   ++m_current;
   token.value = ConstantTable::GetInstance()->Insert(str);
   return token;
@@ -132,7 +143,7 @@ Token LexParser::ParseNumber() {
   while (HasNext() && (std::isdigit(*m_current) || *m_current == '.')) {
     if (*m_current == '.') {
       if (is_float) {
-        throw std::exception{};
+        throw WrongNumber{m_line};
       }
       is_float = true;
       f = static_cast<float>(i);
@@ -223,7 +234,7 @@ Token LexParser::ParseOperator() {
     token.type = TokenType::TOKEN_COMMA;
     break;
   default:
-    throw std::exception{};
+    throw UnknownNotion{m_line, *m_current};
   }
 
   ++m_current;

@@ -26,9 +26,9 @@
 
 #include "basic_exception.h"
 
-class UnexpectedEOF : public BasicException{
+class UnexpectedEndOfString : public BasicException{
 public:
-  explicit UnexpectedEOF(int p_line) : BasicException(p_line) {}
+  explicit UnexpectedEndOfString(int p_line) : BasicException(p_line) {}
   [[nodiscard]] const char* what() const noexcept override;
 };
 

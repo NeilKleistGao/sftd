@@ -43,6 +43,8 @@ private:
   char* m_current;
   char* m_end;
 
+  int m_line;
+
   std::unordered_map<std::string, Token> m_keywords;
 
   Token ParseString();

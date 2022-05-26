@@ -27,6 +27,7 @@
 #include "lex/lex_parser.h"
 #include "tables/constant_table.h"
 #include "tables/symbol_table.h"
+#include "exceptions/lex_exceptions.h"
 
 TEST(LexTest, CharacterTest) {
   const char* CHARACTER_FILE = "character kusanagi_motoko {\n"
@@ -671,5 +672,16 @@ TEST(LexTest, DialogueTest) {
 }
 
 TEST(LexTest, ErrorTest) {
-  EXPECT_EQ(true, true);
+  const char* MUL_LINES_STRING = "\n\n\"abcd\nefg\"";
+
+  ConstantTable::GetInstance()->Clear();
+  SymbolTable::GetInstance()->Clear();
+  try {
+    LexParser parser{MUL_LINES_STRING, std::strlen(MUL_LINES_STRING)};
+    auto token = parser.GetNext();
+    EXPECT_EQ(true, false);
+  }
+  catch (const UnexpectedEndOfString& e) {
+    EXPECT_EQ(std::strcmp("Line 3: unexpected EOF.", e.what()), 0);
+  }
 }
