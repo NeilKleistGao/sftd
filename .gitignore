@@ -37,4 +37,5 @@
 
 CMakeCache.txt
 *_gen.h
+*_gen.hpp
 *_gen.cc
