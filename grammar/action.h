@@ -25,7 +25,7 @@
 #define SFTD_ACTION_H
 
 enum class ActionType {
-  ACCEPT, SHIFT, REDUCE
+  ACCEPT, SHIFT, REDUCE, GOTO
 };
 
 struct Action {

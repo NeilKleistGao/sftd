@@ -26,6 +26,7 @@
 
 #include <map>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "action.h"
@@ -33,7 +34,7 @@
 
 class TableGenerator {
 public:
-  TableGenerator() = default;
+  TableGenerator(): m_current_state(0), m_states_count(0) {};
   ~TableGenerator() = default;
   TableGenerator(const TableGenerator&) = delete;
   TableGenerator& operator=(const TableGenerator&) = delete;
@@ -43,15 +44,35 @@ public:
   using GrammarRules = std::unordered_map<std::string, std::vector<std::string>>;
 
   void Build(const GrammarRules& p_rules);
-  bool HasNext() const;
+
+  inline bool HasNext() const {
+    return m_current_state < m_states_count;
+  }
+
   std::string GetNextCode();
 private:
   using TableIndex = std::pair<int, int>; // rows \times cols
 
+  struct State {
+    std::string from;
+    std::vector<std::string> to;
+    int pos{};
+
+    State() = default;
+    State(std::string  p_from, std::vector<std::string>  p_to, int p_pos)
+        : from(std::move(p_from)), to(std::move(p_to)), pos(p_pos) {}
+  };
+
   std::map<TableIndex, Action> m_table;
+  std::unordered_map<std::string, int> m_map;
+  std::unordered_map<int, std::vector<State>> m_dfa;
 
   int m_states_count;
   int m_current_state;
+
+  void MapTerms(const GrammarRules& p_rules);
+  void BuildDFA(const GrammarRules& p_rules);
+  void BuildDFA(const GrammarRules& p_rules, int p_state);
 };
 
 #endif // SFTD_TABLE_GENERATOR_H
