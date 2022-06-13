@@ -46,10 +46,9 @@ public:
   bool HasNext() const;
   std::string GetNextCode();
 private:
-  using TableIndex = std::pair<int, int>;
+  using TableIndex = std::pair<int, int>; // rows \times cols
 
   std::map<TableIndex, Action> m_table;
-  std::map<TableIndex, int> m_reduce;
 
   int m_states_count;
   int m_current_state;
