@@ -22,3 +22,16 @@
 /// @file table_generator.cc
 
 #include "table_generator.h"
+
+void TableGenerator::Build(const GrammarRules& p_rules) {
+
+}
+
+bool TableGenerator::HasNext() const {
+  return false;
+}
+
+std::string TableGenerator::GetNextCode() {
+  return "";
+}
+

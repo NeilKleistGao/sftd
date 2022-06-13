@@ -24,4 +24,11 @@
 #ifndef SFTD_GRAMMAR_HPP
 #define SFTD_GRAMMAR_HPP
 
+#include <unordered_map>
+#include <vector>
+
+static std::unordered_map<std::string, std::vector<std::string>> s_grammar_rules = {
+
+};
+
 #endif // SFTD_GRAMMAR_HPP

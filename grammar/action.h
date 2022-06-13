@@ -19,32 +19,18 @@
 * SOFTWARE.
  */
 
-/// @file generator_main.cc
+/// @file action.h
 
-#include <iostream>
-#include <fstream>
+#ifndef SFTD_ACTION_H
+#define SFTD_ACTION_H
 
-#include "grammar.hpp"
-#include "grammar/table_generator.h"
+enum class ActionType {
+  ACCEPT, SHIFT, REDUCE
+};
 
-void GenerateTable(std::ofstream& p_fp) {
-  TableGenerator generator{};
-  generator.Build(s_grammar_rules);
+struct Action {
+  ActionType type;
+  unsigned int index;
+};
 
-  while (generator.HasNext()) {
-    p_fp << generator.GetNextCode() << std::endl;
-  }
-}
-
-int main(int argc, char* argv[]) {
-  std::ofstream fp{"../../grammar/lr_table_gen.hpp"};
-  fp << "#ifndef SFTD_LR_TABLE_GEN_HPP" << std::endl;
-  fp << "#define SFTD_LR_TABLE_GEN_HPP" << std::endl;
-  GenerateTable(fp);
-  fp << "#endif // SFTD_LR_TABLE_GEN_HPP" << std::endl;
-  fp << std::endl;
-
-  fp.close();
-
-  return 0;
-}
+#endif // SFTD_ACTION_H

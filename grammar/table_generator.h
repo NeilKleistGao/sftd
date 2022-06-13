@@ -24,4 +24,35 @@
 #ifndef SFTD_TABLE_GENERATOR_H
 #define SFTD_TABLE_GENERATOR_H
 
+#include <map>
+#include <unordered_map>
+#include <vector>
+
+#include "action.h"
+#include "lex/token.h"
+
+class TableGenerator {
+public:
+  TableGenerator() = default;
+  ~TableGenerator() = default;
+  TableGenerator(const TableGenerator&) = delete;
+  TableGenerator& operator=(const TableGenerator&) = delete;
+  TableGenerator(TableGenerator&&) = delete;
+  TableGenerator& operator=(TableGenerator&&) = delete;
+
+  using GrammarRules = std::unordered_map<std::string, std::vector<std::string>>;
+
+  void Build(const GrammarRules& p_rules);
+  bool HasNext() const;
+  std::string GetNextCode();
+private:
+  using TableIndex = std::pair<int, int>;
+
+  std::map<TableIndex, Action> m_table;
+  std::map<TableIndex, int> m_reduce;
+
+  int m_states_count;
+  int m_current_state;
+};
+
 #endif // SFTD_TABLE_GENERATOR_H
