@@ -26,6 +26,7 @@
 void TableGenerator::Build(const GrammarRules& p_rules) {
   MapTerms(p_rules);
   BuildDFA(p_rules);
+  CreateLRTable();
 }
 
 std::string TableGenerator::GetNextCode() {
@@ -67,10 +68,6 @@ void TableGenerator::BuildDFA(const TableGenerator::GrammarRules &p_rules,
   } while (flag);
 
   for (int i = -static_cast<int>(m_map.size()) - 1; i < static_cast<int>(TokenType::TOKENS_SIZE); ++i) {
-    if (i == -1) {
-      continue;
-    }
-
     std::vector<State> new_states;
     for (const auto& s : m_dfa[p_state]) {
       if (s.pos < s.to.size()) {
@@ -80,6 +77,9 @@ void TableGenerator::BuildDFA(const TableGenerator::GrammarRules &p_rules,
         }
         else if (i > -1 && term.GetRight().has_value() && static_cast<int>(term.GetRight().value()) == i) { // token
           new_states.emplace_back(s.from, s.to, s.pos + 1);
+        }
+        else if (i == -1 && term == "$") {
+          m_transition[std::make_pair(p_state, i)] = -1;
         }
       }
     }
@@ -146,4 +146,37 @@ bool TableGenerator::State::operator==(const State& p_other) const {
   }
 
   return false;
+}
+
+void TableGenerator::CreateLRTable() {
+  m_table[{-1, -1}] = Action{};
+  m_table[{-1, -1}].type = ActionType::ACCEPT;
+
+  for (int i = 0; i < m_states_count; ++i) {
+    for (int j = -static_cast<int>(m_map.size()) - 1; j < static_cast<int>(TokenType::TOKENS_SIZE); ++j) {
+      if (j == -1) {
+        continue;
+      }
+
+      if (m_transition.find({i, j}) != m_transition.end()) {
+        Action action{};
+        action.index = m_transition[{i, j}];
+        if (j < -1) {
+          action.type = ActionType::GOTO;
+        }
+        else {
+          action.type = ActionType::SHIFT;
+        }
+
+        m_table[{i, j}] = action;
+      }
+      else if (j > -1) {
+        // TODO:
+      }
+    }
+  }
+}
+
+void TableGenerator::GetFollow(const GrammarRules& p_rules) {
+  // TODO:
 }

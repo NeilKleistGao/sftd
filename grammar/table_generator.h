@@ -26,6 +26,7 @@
 
 #include <map>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -71,15 +72,20 @@ private:
   std::map<TableIndex, int> m_transition;
   std::unordered_map<std::string, int> m_map;
   std::unordered_map<int, std::vector<State>> m_dfa;
+  std::unordered_map<int, std::unordered_set<TokenType>> m_follow;
 
   int m_states_count;
   int m_current_state;
 
   void MapTerms(const GrammarRules& p_rules);
+  void GetFollow(const GrammarRules& p_rules);
+
   void BuildDFA(const GrammarRules& p_rules);
   void BuildDFA(const GrammarRules& p_rules, int p_state);
 
   bool Exists(const std::vector<State>& p_states);
+
+  void CreateLRTable();
 };
 
 #endif // SFTD_TABLE_GENERATOR_H
