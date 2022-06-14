@@ -72,7 +72,8 @@ enum class TokenType {
   TOKEN_COLOR,
   TOKEN_TEXT,
   TOKEN_COMMA,
-  TOKEN_MOVETO
+  TOKEN_MOVETO,
+  TOKENS_SIZE
 };
 
 struct Token {

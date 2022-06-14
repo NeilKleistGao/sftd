@@ -31,6 +31,7 @@
 
 #include "action.h"
 #include "lex/token.h"
+#include "sugars/either.hpp"
 
 class TableGenerator {
 public:
@@ -41,7 +42,7 @@ public:
   TableGenerator(TableGenerator&&) = delete;
   TableGenerator& operator=(TableGenerator&&) = delete;
 
-  using GrammarRules = std::unordered_map<std::string, std::vector<std::string>>;
+  using GrammarRules = std::unordered_map<std::string, std::vector<Either<std::string, TokenType>>>;
 
   void Build(const GrammarRules& p_rules);
 
@@ -52,18 +53,22 @@ public:
   std::string GetNextCode();
 private:
   using TableIndex = std::pair<int, int>; // rows \times cols
+  using TermRule = Either<std::string, TokenType>;
 
   struct State {
     std::string from;
-    std::vector<std::string> to;
+    std::vector<TermRule> to;
     int pos{};
 
     State() = default;
-    State(std::string  p_from, std::vector<std::string>  p_to, int p_pos)
+    State(std::string p_from, std::vector<TermRule> p_to, int p_pos)
         : from(std::move(p_from)), to(std::move(p_to)), pos(p_pos) {}
+
+    bool operator==(const State& p_other) const;
   };
 
   std::map<TableIndex, Action> m_table;
+  std::map<TableIndex, int> m_transition;
   std::unordered_map<std::string, int> m_map;
   std::unordered_map<int, std::vector<State>> m_dfa;
 
@@ -73,6 +78,8 @@ private:
   void MapTerms(const GrammarRules& p_rules);
   void BuildDFA(const GrammarRules& p_rules);
   void BuildDFA(const GrammarRules& p_rules, int p_state);
+
+  bool Exists(const std::vector<State>& p_states);
 };
 
 #endif // SFTD_TABLE_GENERATOR_H

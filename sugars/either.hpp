@@ -19,20 +19,49 @@
 * SOFTWARE.
  */
 
-/// @file grammar.h
+/// @file either.hpp
 
-#ifndef SFTD_GRAMMAR_HPP
-#define SFTD_GRAMMAR_HPP
+#ifndef SFTD_EITHER_HPP
+#define SFTD_EITHER_HPP
 
-#include <unordered_map>
-#include <vector>
+#include <optional>
 
-#include "sugars/either.hpp"
-#include "lex/token.h"
+template<typename LeftT, typename RightT>
+class Either {
+public:
+  explicit Either(const LeftT& p_v) : m_is_left(true), m_left(p_v) {}
+  explicit Either(const RightT& p_v) : m_is_left(false), m_right(p_v) {}
 
-using TermRule = Either<std::string, TokenType>;
-static std::unordered_map<std::string, std::vector<TermRule>> s_grammar_rules = {
+  bool operator==(const LeftT& p_v) const {
+    return m_is_left && m_left == p_v;
+  }
 
+  bool operator==(const RightT& p_v) const {
+    return !m_is_left && m_right == p_v;
+  }
+
+  bool operator==(const Either<LeftT, RightT>& p_other) const {
+    if (m_is_left && p_other.m_is_left) {
+      return m_left.value() == p_other.m_left.value();
+    }
+    else if (!m_is_left && !p_other.m_is_left) {
+      return m_right.value() == p_other.m_right.value();
+    }
+
+    return false;
+  }
+
+  inline std::optional<LeftT> GetLeft() const {
+    return m_left;
+  }
+
+  inline std::optional<RightT> GetRight() const {
+    return m_right;
+  }
+private:
+  std::optional<LeftT> m_left;
+  std::optional<RightT> m_right;
+  bool m_is_left{};
 };
 
-#endif // SFTD_GRAMMAR_HPP
+#endif // SFTD_EITHER_HPP
