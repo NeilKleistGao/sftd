@@ -42,6 +42,8 @@ interact dialogue Talk1 {
         "I'm Alice."
         "Nice to meet you too!"
     }
+    
+    $first = false
 }
 
 interact dialogue Talk2 when (not $first) {

@@ -4,25 +4,29 @@
 - Show avatars, names of characters
 - Play sound effects during dialogues
 - Add text effects
-- Show several dialogues at the same time
+- <del>Show several dialogues at the same time</del>
 - Play animations of characters
 - Move characters to another place
-- Move the camera
-- Add post process effects
+- <del>Move the camera</del>
+- <del>Add post process effects</del>
 - Store or load variables in memory
 - I18N support
 
 ## Binary Structure
-### Dialogue Binary File
 suffix: `.dialogue` -> `.dd` (Dialogue Data)
 - Magic number: 2 Bytes
 - Default language code: 4 Bytes
-- Intern Symbol Table (Symbol Name, Address)
-- Extern Symbol Table (Symbol Name, Filename)
-- The number of parts: 4 Bytes
-- Parts: an int(4 Bytes) for the number of commands and the commands blocks
-- The number of events: 4 Bytes
-- Events: an int(4 Bytes) for the number of commands and the commands blocks
+- The number of strings(not in dialogues): 4Bytes
+- Strings list
+- The number of auto dialogues: 4 Bytes
+- Auto dialogues start addresses
+- The number of trigger dialogues: 4 Bytes
+- Trigger dialogues start addresses
+- The number of interact dialogues: 4 Bytes
+- Interact dialogues start addresses
+- The number of other dialogues: 4 Bytes
+- Other dialogues start addresses
+- Dialogues: an int(4 Bytes) for the number of commands and the commands blocks
 
 
 ## Commands
