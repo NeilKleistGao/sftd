@@ -16,6 +16,8 @@
 suffix: `.dialogue` -> `.dd` (Dialogue Data)
 - Magic number: 2 Bytes
 - Default language code: 4 Bytes
+- Symbol table Size: 4Bytes
+- Symbol table
 - The number of strings(not in dialogues): 4Bytes
 - Strings list
 - The number of auto dialogues: 4 Bytes

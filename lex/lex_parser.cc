@@ -34,18 +34,13 @@ LexParser::LexParser(const char* p_buffer, unsigned long p_length) : m_line(1) {
   m_current = const_cast<char*>(p_buffer);
   m_end = const_cast<char*>(p_buffer + p_length);
 
-  m_keywords.insert(std::make_pair("part", Token{TokenType::TOKEN_PART}));
-  m_keywords.insert(std::make_pair("event", Token{TokenType::TOKEN_EVENT}));
+  m_keywords.insert(std::make_pair("dialogue", Token{TokenType::TOKEN_DIALOGUE}));
+  m_keywords.insert(std::make_pair("when", Token{TokenType::TOKEN_WHEN}));
   m_keywords.insert(std::make_pair("select", Token{TokenType::TOKEN_SELECT}));
   m_keywords.insert(std::make_pair("if", Token{TokenType::TOKEN_IF}));
   m_keywords.insert(std::make_pair("else", Token{TokenType::TOKEN_ELSE}));
   m_keywords.insert(std::make_pair("goto", Token{TokenType::TOKEN_GOTO}));
-  m_keywords.insert(std::make_pair("insert", Token{TokenType::TOKEN_INSERT}));
-  m_keywords.insert(std::make_pair("character", Token{TokenType::TOKEN_CHARACTER}));
-  m_keywords.insert(std::make_pair("default", Token{TokenType::TOKEN_DEFAULT}));
-  m_keywords.insert(std::make_pair("state", Token{TokenType::TOKEN_STATE}));
-  m_keywords.insert(std::make_pair("effect", Token{TokenType::TOKEN_EFFECT}));
-  m_keywords.insert(std::make_pair("on", Token{TokenType::TOKEN_ON}));
+  m_keywords.insert(std::make_pair("use", Token{TokenType::TOKEN_USE}));
   m_keywords.insert(std::make_pair("in", Token{TokenType::TOKEN_IN}));
   m_keywords.insert(std::make_pair("null", Token{TokenType::TOKEN_NULL}));
   m_keywords.insert(std::make_pair("and", Token{TokenType::TOKEN_AND}));
@@ -53,12 +48,13 @@ LexParser::LexParser(const char* p_buffer, unsigned long p_length) : m_line(1) {
   m_keywords.insert(std::make_pair("not", Token{TokenType::TOKEN_NOT}));
   m_keywords.insert(std::make_pair("true", Token{TokenType::TOKEN_BOOL, 1}));
   m_keywords.insert(std::make_pair("false", Token{TokenType::TOKEN_BOOL, 0}));
-  m_keywords.insert(std::make_pair("avatar", Token{TokenType::TOKEN_AVATAR}));
-  m_keywords.insert(std::make_pair("font", Token{TokenType::TOKEN_FONT}));
   m_keywords.insert(std::make_pair("sound", Token{TokenType::TOKEN_SOUND}));
-  m_keywords.insert(std::make_pair("color", Token{TokenType::TOKEN_COLOR}));
-  m_keywords.insert(std::make_pair("Text", Token{TokenType::TOKEN_TEXT}));
-  m_keywords.insert(std::make_pair("moveto", Token{TokenType::TOKEN_MOVETO}));
+  m_keywords.insert(std::make_pair("move", Token{TokenType::TOKEN_MOVE}));
+  m_keywords.insert(std::make_pair("anime", Token{TokenType::TOKEN_ANIME}));
+  m_keywords.insert(std::make_pair("delay", Token{TokenType::TOKEN_DELAY}));
+  m_keywords.insert(std::make_pair("interact", Token{TokenType::TOKEN_INTERACT}));
+  m_keywords.insert(std::make_pair("trigger", Token{TokenType::TOKEN_TRIGGER}));
+  m_keywords.insert(std::make_pair("auto", Token{TokenType::TOKEN_AUTO}));
 }
 
 Token LexParser::GetNext() {
