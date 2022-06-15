@@ -8,13 +8,13 @@ path="./bin/temp"
 echo "path: ${path}"
 files=$(ls $path)
 for file in ${files}
-if [[ $file =~ "test" ]]
-then
-  do
+do
+  if [[ $file =~ "test" ]]
+  then
     res=$(exec "${path}/${file}" | grep "Failure")
     if [[ "$res" != "" ]]
     then
       exit 1
     fi
-  done
-fi
+  fi
+done
