@@ -160,3 +160,25 @@ TEST(Grammar, DialogueTypeTest) {
     EXPECT_EQ(ast->dialogues->dialogue->type.type, TokenType::TOKEN_TRIGGER);
   }
 }
+
+TEST(Grammar, DialogueConditionTest) {
+  {
+    const char* PROGRAM = "dialogue test when (true) {}";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto condition = ast->dialogues->dialogue->condition;
+    EXPECT_EQ(condition->value.value, 1);
+  }
+
+  {
+    const char* PROGRAM = "dialogue test when (1 + 2 == 3 or not $rua) {}";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto condition = ast->dialogues->dialogue->condition;
+    EXPECT_EQ(condition->op, OperatorType::OR);
+    EXPECT_EQ(condition->left->op, OperatorType::EQUAL);
+    EXPECT_EQ(condition->right->op, OperatorType::NOT);
+  }
+}
