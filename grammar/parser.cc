@@ -92,7 +92,7 @@ std::shared_ptr<Dialogues> Parser::ParseDialogues() {
   }
 
   dialogues->dialogue->type = type;
-  if (!m_lex.HasNext()) {
+  if (m_lex.HasNext()) {
     dialogues->next = ParseDialogues();
   }
 
@@ -359,7 +359,7 @@ std::shared_ptr<Expression> Parser::ParseExpression6() {
     exp->right = ParseExpression7();
   }
   else {
-    // TODO: throw
+    exp = ParseExpression7();
   }
 
   return exp;
@@ -375,7 +375,7 @@ std::shared_ptr<Expression> Parser::ParseExpression7() {
     exp->right = ParseExpression8();
   }
   else {
-    // TODO: throw
+    exp = ParseExpression8();
   }
 
   return exp;
