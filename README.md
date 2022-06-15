@@ -31,7 +31,7 @@ dialogue GetCake {
     <NewItem, "cake">
 }
 
-event Talk1 interact {
+interact dialogue Talk1 {
     [Bob(happy)]: {
         sound("hint")
         "Hello!"
@@ -44,11 +44,13 @@ event Talk1 interact {
     }
 }
 
-event Talk2 interact if (not $first) {
-    [Bob]: "It is ${time}. Do you want some food?"
-    select {
-        "cookie": use GetCookie
-        "cake": use GetCake
+interact dialogue Talk2 when (not $first) {
+    [Bob]: {
+        "It is {{$time}}. Do you want some food?"
+        select {
+            "cookie": use GetCookie
+            "cake": use GetCake
+        }
     }
     
     [Bob]: "OK."
@@ -56,9 +58,9 @@ event Talk2 interact if (not $first) {
     anime @alice ("thank")
 }
 
-event Idle auto {
-    move @bob (right, 2) in 4
+auto dialogue Idle {
+    move @bob (2, 0) in 4
     delay 3
-    move @bob (left, 2) in 4
+    move @bob (-2, 0) in 4
 }
 ```

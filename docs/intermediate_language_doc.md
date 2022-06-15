@@ -13,16 +13,6 @@
 - I18N support
 
 ## Binary Structure
-### Character Binary File
-suffix: `.character` -> `.chara` (Character)
-- Magic number: 2 Bytes
-- Character Name
-- The number of strings: 4 Bytes
-- List of strings
-- Default Properties Block(Avatar, Sound, Font)
-- The number of states: 4 Bytes
-- States list(Optional Overload/Default conversion rules)
-
 ### Dialogue Binary File
 suffix: `.dialogue` -> `.dd` (Dialogue Data)
 - Magic number: 2 Bytes
@@ -34,13 +24,6 @@ suffix: `.dialogue` -> `.dd` (Dialogue Data)
 - The number of events: 4 Bytes
 - Events: an int(4 Bytes) for the number of commands and the commands blocks
 
-### Effect Binary File
-suffix: `.effect` -> `.ebo` (Effect Binary Object)
-- Magic number: 2 Bytes
-- Preserved: 4 Bytes
-- The number of effects: 4 Bytes
-- Intern Symbol Table (Symbol Name, Address)
-- Effects list
 
 ## Commands
 ### Format

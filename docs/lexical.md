@@ -1,17 +1,12 @@
 # Lexical Document
 ## Keywords
-- part
-- event
+- when
+- dialogue
 - select
 - if
 - else
 - goto
-- insert
-- character
-- default
-- state
-- effect
-- on
+- use
 - in
 - null
 - and
@@ -19,10 +14,13 @@
 - not
 - true
 - false
-- avatar
-- font
 - sound
-- color
+- anime
+- move
+- delay
+- interact
+- trigger
+- auto
 
 ## Operators
 - `:`
