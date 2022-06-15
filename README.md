@@ -9,68 +9,56 @@ Game Engine Support:
 - [ ] Godot
 - [ ] ...
 
-## Some Demos
-### Create Character Information
-```
-character kusanagi_motoko {
-    default {
-        avatar: "motoko.png"
-        font: default
-        sound: null
-    }
-    
-    state happy {
-        // avatar: "motoko_happy.png"
-        // font: default
-        // sound: null
-    }
-    state angry {
-        avatar: "motoko_angry_pic.png"
-        // font: default
-        // sound: null
-    }
-}
-```
-
-### Create Effects
-```
-effect highlight on Text {
-    color: "#FF0000"
-}
-```
-
-### Dialogue
+## A Simple Demo
 ```
 #{"en-GB", "zh-CN"}
 
-part intro {
-    [tachikoma]: "tachikoma desu!"
-    [kusanagi_motoko]: "Hello! tachikoma number{$id}"
-}
-
-part ask {
-    [kusanagi_motoko]: {
-        "Hello."
-        @Motoko moveto (1, 2) in 2
-        "What's your <highlight>name</> ?"
+dialogue GetCookie {
+    [Alice]: {
+        "Give me some cookies please."
+        "I'm not hungry now."
     }
     
+    <NewItem, "cookie">
+}
+
+dialogue GetCake {
+    [Alice]: {
+        "Give me some cake please."
+        "It looks great." in 2
+    }
+    
+    <NewItem, "cake">
+}
+
+event Talk1 interact {
+    [Bob(happy)]: {
+        sound("hint")
+        "Hello!"
+        "My name is Bob!"
+        "Nice to meet you!"
+    }
+    [Alice]: {
+        "I'm Alice."
+        "Nice to meet you too!"
+    }
+}
+
+event Talk2 interact if (not $first) {
+    [Bob]: "It is ${time}. Do you want some food?"
     select {
-        "tachikoma": goto intro
-        "go away"
+        "cookie": use GetCookie
+        "cake": use GetCake
     }
     
-    [kusanagi_motoko(confused)]: "Alright."
-    
-    if ($left) {
-        @Motoko moveto (0, 3) in 2
-    }
-    else {
-        @Motoko moveto (2, 3) in 2
-    }
+    [Bob]: "OK."
+    [Alice]: "Thnak you!"
+    anime @alice ("thank")
 }
 
-event Greet {
-    insert ask
+event Idle auto {
+    move @bob (right, 2) in 4
+    delay 3
+    move @bob (left, 2) in 4
 }
 ```
