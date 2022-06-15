@@ -36,44 +36,57 @@ OperatorID: 1
 Parameters: null
 
 ### Set Speakers
-Set the speakers' data, including avatars, sounds and names.
-OperatorID: 2, 3, 4
+Set the speakers' data.
+OperatorID: 2, 3
 Parameters:
-- Avatar String's Index (for Operator 2)
-- Sounds String's Index (for Operator 3)
-- Name String's Index (for Operator 4)
+- Speaker's name
+- Speaker's state (for Operator 3)
 
 ### Talk
 Set the dialogue content.
-OperatorID: 5, 6
+OperatorID: 4, 5
 Parameters:
 - String's ID
-- Time (for Operator 6)
+- Time (for Operator 5)
 
 ### Jump
 Call or jump to another part of dialogues.
-OperatorID: 7(for call), 8(for jump)
+OperatorID: 6(for call), 7(for jump)
 Parameters:
 - Target part's index
 
-### Effect
-Add or Remove an effect.
-OperatorID: 9, 10
-Parameters:
-- Effect ID(for Operator 9)
-
 ### Options
 Provide options for players.
-OperatorID: 11
+OperatorID: 8
 Parameters:
 - String's ID
 - Next Address
 
 ### Get Data From Games
 Get variables/characters from the game
-OperatorID: 12(variables), 13(characters)
+OperatorID: 9(variables), 10(characters)
 Parameters:
 - Data's name
+
+### Set Data From Games
+Get variables/characters from the game
+OperatorID: 11
+Parameters:
+- Data's name
+- Data's value
+
+### Play Animation
+Play animation.
+OperatorID: 12
+Parameters:
+- Target's name
+- Animation's name
+
+### Play Sound
+Play sound effect.
+OperatorID: 13
+Parameters:
+- Sound's name
 
 ### Calculations
 Calculate.
@@ -100,7 +113,13 @@ Parameters:
 - Position Y
 - Time(for Operator 26)
 
+### Delay
+Wait for seconds.
+OperatorID: 27
+Parameters:
+- Time(in seconds)
+
 ### End
 End a dialogue.
-OperatorID: 27
+OperatorID: 28
 Parameters: null
