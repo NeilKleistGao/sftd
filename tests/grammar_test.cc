@@ -103,3 +103,26 @@ TEST(Grammar, ExpressionTest) {
     EXPECT_EQ(left->left->left->op, OperatorType::NEG);
   }
 }
+
+TEST(Grammar, LanguageTest) {
+  {
+    const char* PROGRAM = R"(#{"en-GB"})";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    EXPECT_NE(ast->i18n, nullptr);
+    EXPECT_EQ(ast->i18n->options.size(), 1);
+    EXPECT_EQ(ast->i18n->options[0].value, 0);
+  }
+
+  {
+    const char* PROGRAM = R"(#{"en-GB", "zh-CN"})";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    EXPECT_NE(ast->i18n, nullptr);
+    EXPECT_EQ(ast->i18n->options.size(), 2);
+    EXPECT_EQ(ast->i18n->options[0].value, 0);
+    EXPECT_EQ(ast->i18n->options[1].value, 1);
+  }
+}
