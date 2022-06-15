@@ -66,5 +66,40 @@ TEST(Grammar, ExpressionTest) {
     auto ast = parser.GenerateAST();
     auto cmd = ast->dialogues->dialogue->content->command;
     auto assign = std::dynamic_pointer_cast<Assign>(cmd);
+    EXPECT_EQ(assign->expression->op, OperatorType::OR);
+    EXPECT_EQ(assign->expression->left->op, OperatorType::NOT);
+    EXPECT_EQ(assign->expression->left->right->value.value, 2);
+    EXPECT_EQ(assign->expression->right->value.value, 3);
+  }
+
+  {
+    const char* EXP = "dialogue test { $temp = 3 * (2 + 3) == 7 and 2.5 / 2 <= 4 or false }";
+    Parser parser{EXP, std::strlen(EXP)};
+    auto ast = parser.GenerateAST();
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto assign = std::dynamic_pointer_cast<Assign>(cmd);
+    EXPECT_EQ(assign->expression->op, OperatorType::OR);
+    auto left = assign->expression->left;
+    EXPECT_EQ(left->op, OperatorType::AND);
+    EXPECT_EQ(left->left->op, OperatorType::EQUAL);
+    EXPECT_EQ(left->right->op, OperatorType::LESS_EQUAL);
+    auto first = left->left; auto second = left->right;
+    EXPECT_EQ(first->left->op, OperatorType::MUL);
+    EXPECT_EQ(second->left->op, OperatorType::DIV);
+  }
+
+  {
+    const char* EXP = "dialogue test { $temp = -1 + 2 + 3 == 7 % 5 }";
+    Parser parser{EXP, std::strlen(EXP)};
+    auto ast = parser.GenerateAST();
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto assign = std::dynamic_pointer_cast<Assign>(cmd);
+    EXPECT_EQ(assign->expression->op, OperatorType::EQUAL);
+    EXPECT_EQ(assign->expression->right->op, OperatorType::MOD);
+
+    auto left = assign->expression->left;
+    EXPECT_EQ(left->op, OperatorType::ADD);
+    EXPECT_EQ(left->left->op, OperatorType::ADD);
+    EXPECT_EQ(left->left->left->op, OperatorType::NEG);
   }
 }
