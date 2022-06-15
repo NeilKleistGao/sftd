@@ -4,17 +4,14 @@ make
 cmake -DBUILD_TEST=ON .
 make
 
-path="./bin/temp"
+path="./bin/test"
 echo "path: ${path}"
 files=$(ls $path)
 for file in ${files}
 do
-  if [[ $file =~ "test" ]]
+  res=$(exec "${path}/${file}" | grep "Failure")
+  if [[ "$res" != "" ]]
   then
-    res=$(exec "${path}/${file}" | grep "Failure")
-    if [[ "$res" != "" ]]
-    then
-      exit 1
-    fi
+    exit 1
   fi
 done

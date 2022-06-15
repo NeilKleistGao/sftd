@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(sftd)
 
 set(CMAKE_CXX_STANDARD 17)
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/temp")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/test")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin")
 
 option(BUILD_TEST "build test modules" ON)
@@ -33,8 +33,6 @@ include(lex/CMakeLists.txt)
 include(tables/CMakeLists.txt)
 include(exceptions/CMakeLists.txt)
 include(grammar/CMakeLists.txt)
-
-add_executable(table_generator generator_main.cc grammar.hpp grammar/table_generator.h grammar/table_generator.cc)
 
 add_library(sftd SHARED main.cc ${SUGAR_HEADER} ${SUGAR_SRC}
         ${LEX_HEADER} ${LEX_SRC}

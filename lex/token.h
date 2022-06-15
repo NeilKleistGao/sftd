@@ -69,7 +69,8 @@ enum class TokenType {
   TOKEN_INTERACT,
   TOKEN_TRIGGER,
   TOKEN_AUTO,
-  TOKENS_SIZE
+  TOKENS_SIZE,
+  TOKEN_EMPTY
 };
 
 struct Token {
