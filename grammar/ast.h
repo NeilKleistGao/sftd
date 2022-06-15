@@ -30,7 +30,7 @@
 #include "lex/token.h"
 
 enum class OperatorType {
-  ADD, SUB, MUL, DIV, MOD, LESS, GREATER, LESS_EQUAL, GREATER_EQUAL, EQUAL, AND, OR, NOT, NEG
+  EMPTY = 0, ADD, SUB, MUL, DIV, MOD, LESS, GREATER, LESS_EQUAL, GREATER_EQUAL, EQUAL, AND, OR, NOT, NEG
 };
 
 struct I18NOptions {
@@ -38,8 +38,8 @@ struct I18NOptions {
 };
 
 struct Expression {
-  Token value;
-  OperatorType op;
+  Token value = Token{TokenType::TOKEN_EMPTY};
+  OperatorType op = OperatorType::EMPTY;
   std::shared_ptr<Expression> left;
   std::shared_ptr<Expression> right;
 };
