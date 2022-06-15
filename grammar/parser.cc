@@ -455,7 +455,7 @@ std::shared_ptr<Command> Parser::ParseCommand() {
   case TokenType::TOKEN_LEFT_SQUARE:
     return ParseSpeak();
     break;
-  case TokenType::TOKEN_VARIABLE:
+  case TokenType::TOKEN_DOLLAR:
     return ParseAssign();
     break;
   case TokenType::TOKEN_LESS:
@@ -687,6 +687,7 @@ std::shared_ptr<Speak> Parser::ParseSpeak() {
 }
 
 std::shared_ptr<Assign> Parser::ParseAssign() {
+  m_lex.GetNext();
   auto res = std::make_shared<Assign>();
   res->target = m_lex.GetNext();
 
