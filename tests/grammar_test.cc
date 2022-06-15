@@ -126,3 +126,37 @@ TEST(Grammar, LanguageTest) {
     EXPECT_EQ(ast->i18n->options[1].value, 1);
   }
 }
+
+TEST(Grammar, DialogueTypeTest) {
+  {
+    const char* PROGRAM = "dialogue test {}";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    EXPECT_EQ(ast->dialogues->dialogue->type.type, TokenType::TOKEN_EMPTY);
+  }
+
+  {
+    const char* PROGRAM = "auto dialogue test {}";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    EXPECT_EQ(ast->dialogues->dialogue->type.type, TokenType::TOKEN_AUTO);
+  }
+
+  {
+    const char* PROGRAM = "interact dialogue test {}";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    EXPECT_EQ(ast->dialogues->dialogue->type.type, TokenType::TOKEN_INTERACT);
+  }
+
+  {
+    const char* PROGRAM = "trigger dialogue test {}";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    EXPECT_EQ(ast->dialogues->dialogue->type.type, TokenType::TOKEN_TRIGGER);
+  }
+}
