@@ -390,9 +390,17 @@ std::shared_ptr<Expression> Parser::ParseExpression8() {
   case TokenType::TOKEN_FLOAT:
   case TokenType::TOKEN_STRING:
   case TokenType::TOKEN_BOOL:
-  case TokenType::TOKEN_VARIABLE:
     res->value = tk;
     break;
+  case TokenType::TOKEN_DOLLAR: {
+    tk = m_lex.GetNext();
+    if (tk.type != TokenType::TOKEN_VARIABLE) {
+      // TODO: throw
+    }
+
+    res->value = tk;
+    break;
+  }
   case TokenType::TOKEN_LEFT_PARENTHESES: {
     res = ParseExpression0();
     tk = m_lex.GetNext();
