@@ -58,45 +58,14 @@ LexParser::LexParser(const char* p_buffer, unsigned long p_length) : m_line(1) {
 }
 
 Token LexParser::GetNext() {
-  while (HasNext() && std::isspace(*m_current)) {
-    if (*m_current == '\n') {
-      ++m_line;
-    }
-    ++m_current;
+  Token res;
+  if (!m_next.has_value()) {
+    LookNext();
   }
 
-  while (HasNext() && *m_current == '/' && *(m_current + 1) == '/') {
-    while (HasNext() && *m_current != '\n') {
-      ++m_current;
-    }
-
-    ++m_current; ++m_line;
-    while (HasNext() && std::isspace(*m_current)) {
-      if (*m_current == '\n') {
-        ++m_line;
-      }
-      ++m_current;
-    }
-  }
-
-  if (!HasNext()) {
-    Token eof{};
-    eof.type = TokenType::TOKEN_EOF;
-    return eof;
-  }
-
-  if (*m_current == '"') {
-    return ParseString();
-  }
-  else if (std::isdigit(*m_current)) {
-    return ParseNumber();
-  }
-  else if (std::isalpha(*m_current)) {
-    return ParseKeywords();
-  }
-  else {
-    return ParseOperator();
-  }
+  res = m_next.value();
+  m_next.reset();
+  return res;
 }
 
 Token LexParser::ParseString() {
@@ -250,5 +219,53 @@ Token LexParser::ParseKeywords() {
   else {
     return Token{TokenType::TOKEN_VARIABLE, SymbolTable::GetInstance()->Insert(keyword)};
   }
+}
+
+Token LexParser::LookNext() {
+  if (m_next.has_value()) {
+    return m_next.value();
+  }
+
+  while (HasNext() && std::isspace(*m_current)) {
+    if (*m_current == '\n') {
+      ++m_line;
+    }
+    ++m_current;
+  }
+
+  while (HasNext() && *m_current == '/' && *(m_current + 1) == '/') {
+    while (HasNext() && *m_current != '\n') {
+      ++m_current;
+    }
+
+    ++m_current; ++m_line;
+    while (HasNext() && std::isspace(*m_current)) {
+      if (*m_current == '\n') {
+        ++m_line;
+      }
+      ++m_current;
+    }
+  }
+
+  if (!HasNext()) {
+    Token eof{};
+    eof.type = TokenType::TOKEN_EOF;
+    return eof;
+  }
+
+  if (*m_current == '"') {
+    m_next = ParseString();
+  }
+  else if (std::isdigit(*m_current)) {
+    m_next = ParseNumber();
+  }
+  else if (std::isalpha(*m_current)) {
+    m_next = ParseKeywords();
+  }
+  else {
+    m_next = ParseOperator();
+  }
+
+  return m_next.value();
 }
 

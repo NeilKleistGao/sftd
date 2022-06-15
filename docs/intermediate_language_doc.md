@@ -38,65 +38,85 @@ suffix: `.dialogue` -> `.dd` (Dialogue Data)
 
 ### Start Dialogues
 Start a dialogue.
+
 OperatorID: 1
+
 Parameters: null
 
 ### Set Speakers
 Set the speakers' data.
+
 OperatorID: 2, 3
+
 Parameters:
 - Speaker's name
 - Speaker's state (for Operator 3)
 
 ### Talk
 Set the dialogue content.
+
 OperatorID: 4, 5
+
 Parameters:
 - String's ID
 - Time (for Operator 5)
 
 ### Jump
 Call or jump to another part of dialogues.
+
 OperatorID: 6(for call), 7(for jump)
+
 Parameters:
 - Target part's index
 
 ### Options
 Provide options for players.
+
 OperatorID: 8
+
 Parameters:
 - String's ID
 - Next Address
 
 ### Get Data From Games
 Get variables/characters from the game
+
 OperatorID: 9(variables), 10(characters)
+
 Parameters:
 - Data's name
 
 ### Set Data From Games
 Get variables/characters from the game
+
 OperatorID: 11
+
 Parameters:
 - Data's name
 - Data's value
 
 ### Play Animation
 Play animation.
+
 OperatorID: 12
+
 Parameters:
 - Target's name
 - Animation's name
 
 ### Play Sound
 Play sound effect.
+
 OperatorID: 13
+
 Parameters:
 - Sound's name
 
 ### Calculations
 Calculate.
+
 OperatorID: 14(+), 15(-), 16(*), 17(/), 18(%), 19(=), 20(and), 21(or), 22(not), 23(-neg)
+
 Parameters:
 - Target variable
 - First parameter
@@ -104,7 +124,9 @@ Parameters:
 
 ### Conditions
 Jump by the given condition.
+
 OperatorID: 24
+
 Parameters:
 - Condition's value
 - True address
@@ -112,7 +134,9 @@ Parameters:
 
 ### Move
 Move a character to another place.
+
 OperatorID: 25, 26
+
 Parameters:
 - Character ID
 - Position X
@@ -121,11 +145,26 @@ Parameters:
 
 ### Delay
 Wait for seconds.
+
 OperatorID: 27
+
 Parameters:
 - Time(in seconds)
 
+
+### Publish
+Publish an event.
+
+OperatorID: 28, 29, 30
+
+Parameters:
+- Event name
+- First parameter(for 29, 30)
+- Second parameter(for 30)
+
 ### End
 End a dialogue.
-OperatorID: 28
+
+OperatorID: 31
+
 Parameters: null

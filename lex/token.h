@@ -69,7 +69,6 @@ enum class TokenType {
   TOKEN_INTERACT,
   TOKEN_TRIGGER,
   TOKEN_AUTO,
-  TOKENS_SIZE,
   TOKEN_EMPTY
 };
 

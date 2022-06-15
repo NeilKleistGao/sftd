@@ -19,41 +19,10 @@
 * SOFTWARE.
  */
 
-/// @file lex_parser.h
+/// @file grammar_test.cc
 
-#ifndef SFTD_LEX_PARSER_H
-#define SFTD_LEX_PARSER_H
+#include <gtest/gtest.h>
 
-#include <unordered_map>
-#include <optional>
-
-#include "token.h"
-
-class LexParser {
-public:
-  LexParser(const char* p_buffer, unsigned long p_length);
-  ~LexParser() = default;
-
-  Token GetNext();
-  Token LookNext();
-
-  inline bool HasNext() const {
-    return m_current != m_end;
-  }
-
-private:
-  char* m_current;
-  char* m_end;
-
-  int m_line;
-
-  std::unordered_map<std::string, Token> m_keywords;
-  std::optional<Token> m_next;
-
-  Token ParseString();
-  Token ParseNumber();
-  Token ParseOperator();
-  Token ParseKeywords();
-};
-
-#endif // SFTD_LEX_PARSER_H
+TEST(Grammar, ExpressionTest) {
+  EXPECT_EQ(true, true);
+}
