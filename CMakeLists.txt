@@ -41,7 +41,7 @@ add_library(sftd SHARED main.cc ${SUGAR_HEADER} ${SUGAR_SRC}
         ${GRAMMAR_HEADER} ${GRAMMAR_SRC})
 
 if (BUILD_TEST)
-    add_library(sftd_test main.cc ${SUGAR_HEADER} ${SUGAR_SRC} ${LEX_HEADER} ${LEX_SRC} ${TABLES_HEADER} ${TABLES_SRC} ${EXCEPTIONS_HEADER} ${EXCEPTIONS_SRC})
+    add_library(sftd_test main.cc ${SUGAR_HEADER} ${SUGAR_SRC} ${LEX_HEADER} ${LEX_SRC} ${TABLES_HEADER} ${TABLES_SRC} ${EXCEPTIONS_HEADER} ${EXCEPTIONS_SRC} ${GRAMMAR_HEADER} ${GRAMMAR_SRC})
     file(GLOB test_files RELATIVE ${CMAKE_SOURCE_DIR}/tests ${CMAKE_SOURCE_DIR}/tests/*.cc)
     foreach(filename ${test_files})
         string(REPLACE ".cc" "" test_name ${filename})

@@ -33,8 +33,9 @@ Parser::Parser(const char* p_buffer, unsigned long p_length) : m_lex(p_buffer, p
 
 std::shared_ptr<Program> Parser::GenerateAST() {
   auto ast = std::make_shared<Program>();
-  Token head = m_lex.GetNext();
+  Token head = m_lex.LookNext();
   if (head.type == TokenType::TOKEN_SHARP) {
+    m_lex.GetNext();
     ast->i18n = ParseI18NInfo();
   }
 

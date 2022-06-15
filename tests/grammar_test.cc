@@ -22,7 +22,12 @@
 /// @file grammar_test.cc
 
 #include <gtest/gtest.h>
+#include <cstring>
+
+#include "grammar/parser.h"
 
 TEST(Grammar, ExpressionTest) {
-  EXPECT_EQ(true, true);
+  const char* EXP1 = "dialogue test { 12 + 3 * 4 }";
+  Parser parser1{EXP1, std::strlen(EXP1)};
+  auto ast1 = parser1.GenerateAST();
 }
