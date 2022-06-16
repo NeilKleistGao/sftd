@@ -136,3 +136,34 @@ TEST(CompileTest, SymbolTableTest) {
     EXPECT_EQ(buffer[33], '2');
   }
 }
+
+TEST(CompileTest, StringTableTest) {
+  {
+    const char* PROGRAM = R"(dialogue test{"test"})";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+    EXPECT_EQ(buffer[20], 0);
+    EXPECT_EQ(buffer[21], 0);
+    EXPECT_EQ(buffer[22], 0);
+    EXPECT_EQ(buffer[23], 1);
+
+    EXPECT_EQ(buffer[24], 0);
+    EXPECT_EQ(buffer[25], 0);
+    EXPECT_EQ(buffer[26], 0);
+    EXPECT_EQ(buffer[27], 0);
+
+    EXPECT_EQ(buffer[28], 0);
+    EXPECT_EQ(buffer[29], 0);
+    EXPECT_EQ(buffer[30], 0);
+    EXPECT_EQ(buffer[31], 4);
+
+    EXPECT_EQ(buffer[32], 't');
+    EXPECT_EQ(buffer[33], 'e');
+    EXPECT_EQ(buffer[34], 's');
+    EXPECT_EQ(buffer[35], 't');
+  }
+}
