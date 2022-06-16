@@ -32,18 +32,18 @@
 
 class I18NTable : public Singleton<I18NTable> {
 public:
-  void Insert(const std::string& p_str);
+  void Insert(int p_id);
 
   inline unsigned long GetSize() const {
     return m_pool.size();
   }
 
-  inline std::string GetString(int p_id) const {
+  inline int GetStringID(int p_id) const {
     return m_pool[p_id];
   }
 private:
-  std::vector<std::string> m_pool;
-  std::unordered_set<std::string> m_visit;
+  std::vector<int> m_pool;
+  std::unordered_set<int> m_visit;
 };
 
 #endif // SFTD_I18N_TABLE_H

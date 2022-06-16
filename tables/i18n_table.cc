@@ -25,9 +25,9 @@
 
 template<> I18NTable* Singleton<I18NTable>::m_instance = nullptr;
 
-void I18NTable::Insert(const std::string &p_str) {
-  if (m_visit.find(p_str) == m_visit.end()) {
-    m_visit.insert(p_str);
-    m_pool.push_back(p_str);
+void I18NTable::Insert(int p_id) {
+  if (m_visit.find(p_id) == m_visit.end()) {
+    m_visit.insert(p_id);
+    m_pool.push_back(p_id);
   }
 }

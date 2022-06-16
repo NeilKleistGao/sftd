@@ -662,7 +662,7 @@ std::shared_ptr<Message> Parser::ParseMessage() {
     throw GrammarMissing{tk.line, "string"};
   }
 
-  I18NTable::GetInstance()->Insert(ConstantTable::GetInstance()->Find(tk.value));
+  I18NTable::GetInstance()->Insert(tk.value);
   res->str = tk;
   tk = m_lex.LookNext();
   if (tk.type == TokenType::TOKEN_IN) {
@@ -748,7 +748,7 @@ std::shared_ptr<Option> Parser::ParseOption() {
   }
 
   res->hint = tk;
-  I18NTable::GetInstance()->Insert(ConstantTable::GetInstance()->Find(tk.value));
+  I18NTable::GetInstance()->Insert(tk.value);
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_COLON) {
