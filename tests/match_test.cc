@@ -133,7 +133,7 @@ TEST(MatchTest, ClassMatchTest) {
 }
 
 TEST(MatchTest, RegMatchTest) {
-  auto res1 = Matcher<std::string, int, true>::Match("1208368577")
+  auto res1 = Matcher<std::string, int, void, true>::Match("1208368577")
       ->Case("[1-9]\\d{4,11}")([](const std::string& _){ return 1; })
       ->Case("[\\w]+")([](const std::string& _){ return 0; })
       ->CaseDefault()([](const std::string& _){ return -1; })->Result();
@@ -141,7 +141,7 @@ TEST(MatchTest, RegMatchTest) {
   EXPECT_EQ(res1.has_value(), true);
   EXPECT_EQ(res1.value(), 1);
 
-  auto res2 = Matcher<std::string, int, true>::Match("dark_side_of_the_moon")
+  auto res2 = Matcher<std::string, int, void, true>::Match("dark_side_of_the_moon")
       ->Case("[1-9]\\d{4,11}")([](const std::string& _){ return 1; })
       ->Case("[\\w]+")([](const std::string& _){ return 0; })
       ->CaseDefault()([](const std::string& _){ return -1; })->Result();
@@ -149,7 +149,7 @@ TEST(MatchTest, RegMatchTest) {
   EXPECT_EQ(res2.has_value(), true);
   EXPECT_EQ(res2.value(), 0);
 
-  auto res3 = Matcher<std::string, int, true>::Match("")
+  auto res3 = Matcher<std::string, int, void, true>::Match("")
       ->Case("[1-9]\\d{4,11}")([](const std::string& _){ return 1; })
       ->Case("[\\w]+")([](const std::string& _){ return 0; })
       ->CaseDefault()([](const std::string& _){ return -1; })->Result();
@@ -164,7 +164,7 @@ TEST(MatchTest, NoReturnTest) {
       ->Case(2)([](){ EXPECT_EQ(true, true); })
       ->Case(3)([]() { EXPECT_EQ(true, false); });
 
-  Matcher<std::string, void, true>::Match("")
+  Matcher<std::string, void, void, true>::Match("")
       ->Case("[1-9]\\d{4,11}")([](const std::string& _){ EXPECT_EQ(true, false); })
       ->Case("[\\w]+")([](const std::string& _){ EXPECT_EQ(true, false); })
       ->CaseDefault()([](const std::string& _){ EXPECT_EQ(true, true); });

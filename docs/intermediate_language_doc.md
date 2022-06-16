@@ -113,18 +113,18 @@ Jump by the given condition.
 OperatorID: 13
 
 Parameters:
-- Condition's value
+- Condition value type
+- Condition value
 - False address
 
 ### Calculations
 Calculate.
 
-OperatorID: 14(+), 15(-), 16(*), 17(/), 18(%), 19(=), 20(and), 21(or), 22(not), 23(-neg)
+OperatorID: 14(+), 15(-), 16(*), 17(/), 18(%), 19(=), 20(and), 21(or), 22(not), 23(-neg), 24(<), 25(>), 26(<=), 27(>=)
 
 Parameters:
 - Target variable
 - First Expression type(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
-- Second Expression type(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
 - First parameter
 - Second Expression type(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
 - Second parameter(except 19, 22, 23)
@@ -132,7 +132,7 @@ Parameters:
 ### Delay
 Wait for seconds.
 
-OperatorID: 24
+OperatorID: 28
 
 Parameters:
 - Time(in seconds)
@@ -141,7 +141,7 @@ Parameters:
 ### Publish
 Publish an event.
 
-OperatorID: 25
+OperatorID: 29
 
 Parameters:
 - Event name

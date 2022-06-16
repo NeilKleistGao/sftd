@@ -40,11 +40,38 @@ public:
   inline std::vector<ILCommand>& Access() {
     return m_pool;
   }
+
+  inline int GetSize() const {
+    return m_size;
+  }
+
 private:
   std::vector<ILCommand> m_pool;
   int m_temp_variable_count;
+  int m_size;
 
-  int TranslateExpress(const std::shared_ptr<Expression>& p_exp);
+  Token TranslateExpress(const std::shared_ptr<Expression>& p_exp);
+  void TranslateContent(const std::shared_ptr<Content>& p_content);
+  void TranslateCommand(const std::shared_ptr<Command>& p_cmd);
+  void TranslateAnimate(const std::shared_ptr<Animate>& p_cmd);
+  void TranslateSound(const std::shared_ptr<Sound>& p_cmd);
+  void TranslateDelay(const std::shared_ptr<Delay>& p_cmd);
+  void TranslateMove(const std::shared_ptr<Move>& p_cmd);
+  void TranslateGoto(const std::shared_ptr<Goto>& p_cmd);
+  void TranslateUse(const std::shared_ptr<Use>& p_cmd);
+  void TranslateSelect(const std::shared_ptr<Select>& p_cmd);
+  void TranslateIf(const std::shared_ptr<If>& p_cmd);
+  void TranslateAssign(const std::shared_ptr<Assign>& p_cmd);
+  void TranslateMessage(const std::shared_ptr<Message>& p_cmd);
+  void TranslateSpeak(const std::shared_ptr<Speak>& p_cmd);
+  void TranslatePublish(const std::shared_ptr<Publish>& p_cmd);
+
+  static int GetVariableType(TokenType p_type);
+
+  inline void Push(ILCommand&& p_cmd) {
+    m_size += 4 * static_cast<int>(p_cmd.parameters.size());
+    m_pool.push_back(p_cmd);
+  }
 };
 
 #endif // SFTD_TRANSLATOR_H

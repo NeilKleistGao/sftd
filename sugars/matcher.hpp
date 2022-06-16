@@ -29,7 +29,7 @@
 #include <memory>
 #include <regex>
 
-template<typename ParamType, typename ReturnType, bool Reg = false>
+template<typename ParamType, typename ReturnType, typename PType = void, bool Reg = false>
 class Matcher {
 private:
   template <typename MatchType>
@@ -131,7 +131,7 @@ private:
 };
 
 template<typename ParamType, bool Reg>
-class Matcher<ParamType, void, Reg> {
+class Matcher<ParamType, void, void, Reg> {
 private:
   template <typename MatchType>
   struct MatchResult {
@@ -225,8 +225,103 @@ private:
   bool m_matched;
 };
 
+template<typename ParamType, bool Reg>
+class Matcher<ParamType, void, std::shared_ptr<ParamType>, Reg> {
+private:
+  template <typename MatchType>
+  struct MatchResult {
+    bool matched = false;
+    Matcher* self = nullptr;
+    std::optional<MatchType> param;
+
+    using RefFunc = std::function<void(const MatchType&)>;
+    using PointerFunc = std::function<void(MatchType*)>;
+    using IgnoreFunc = std::function<void(void)>;
+
+    Matcher* operator()(const RefFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        p_func(param.value());
+      }
+
+      return self;
+    }
+
+    Matcher* operator()(const PointerFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        p_func(param.value());
+      }
+
+      return self;
+    }
+
+    Matcher* operator()(const IgnoreFunc& p_func) {
+      if (matched) {
+        self->m_matched = true;
+        p_func();
+      }
+
+      return self;
+    }
+  };
+
+public:
+  explicit Matcher(const std::shared_ptr<ParamType>& p_input) : m_input(p_input), m_matched(false) {
+  }
+
+  static std::unique_ptr<Matcher> Match(const std::shared_ptr<ParamType>& p_input) {
+    return std::make_unique<Matcher>(p_input);
+  }
+
+  ~Matcher() = default;
+  Matcher(const Matcher&) = delete;
+  Matcher& operator=(const Matcher&) = delete;
+  Matcher(Matcher&&) = delete;
+  Matcher& operator=(Matcher&&) = delete;
+
+  template <typename MatchType>
+  MatchResult<std::shared_ptr<MatchType>> Case() {
+    MatchResult<std::shared_ptr<MatchType>> result{};
+    auto temp = std::dynamic_pointer_cast<MatchType>(m_input);
+    result.matched = !m_matched && temp != nullptr;
+    if (result.matched) {
+      result.param = temp;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+  MatchResult<std::shared_ptr<ParamType>> Case(const std::shared_ptr<ParamType>& p_pattern) {
+    MatchResult<std::shared_ptr<ParamType>> result{};
+    result.matched = !m_matched && m_input == p_pattern;
+    if (result.matched) {
+      result.param = m_input;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+  MatchResult<std::shared_ptr<ParamType>> CaseDefault() {
+    MatchResult<std::shared_ptr<ParamType>> result{};
+    result.matched = !m_matched;
+    if (result.matched) {
+      result.param = m_input;
+    }
+
+    result.self = this;
+    return result;
+  }
+
+private:
+  const std::shared_ptr<ParamType>& m_input;
+  bool m_matched;
+};
+
 template<typename ReturnType>
-class Matcher<std::string, ReturnType, true> {
+class Matcher<std::string, ReturnType, void, true> {
 private:
   struct MatchResult {
     bool matched = false;
@@ -304,7 +399,7 @@ private:
 };
 
 template<>
-class Matcher<std::string, void, true> {
+class Matcher<std::string, void, void, true> {
 private:
   struct MatchResult {
     bool matched = false;

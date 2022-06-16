@@ -50,6 +50,10 @@ enum class CommandType {
   OR,
   NOT,
   NEG,
+  LESS,
+  GREATER,
+  LESS_EQUAL,
+  GREATER_EQUAL,
   DELAY,
   PUBLISH,
   END_DIALOGUE
