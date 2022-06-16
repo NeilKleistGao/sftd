@@ -182,3 +182,27 @@ TEST(Grammar, DialogueConditionTest) {
     EXPECT_EQ(condition->right->op, OperatorType::NOT);
   }
 }
+
+TEST(Grammar, CommandTest) {
+  {
+    const char* PROGRAM = "dialogue test { delay 2 }";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto delay = std::dynamic_pointer_cast<Delay>(cmd);
+    EXPECT_NE(delay, nullptr);
+    EXPECT_EQ(delay->time->value.value, 2);
+  }
+
+  {
+    const char* PROGRAM = R"(dialogue test { sound "rua" })";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto sound = std::dynamic_pointer_cast<Sound>(cmd);
+    EXPECT_NE(sound, nullptr);
+    EXPECT_EQ(sound->effect->value.value, 0);
+  }
+}

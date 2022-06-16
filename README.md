@@ -33,7 +33,7 @@ dialogue GetCake {
 
 interact dialogue Talk1 {
     [Bob(happy)]: {
-        sound("hint")
+        sound "hint"
         "Hello!"
         "My name is Bob!"
         "Nice to meet you!"
