@@ -350,5 +350,19 @@ TEST(Grammar, TextTest) {
     auto cmd = ast->dialogues->dialogue->content->command;
     auto msg = std::dynamic_pointer_cast<Message>(cmd);
     EXPECT_NE(msg, nullptr);
+    EXPECT_EQ(msg->str.value, 0);
+  }
+
+  {
+    const char* PROGRAM = R"(dialogue test { [Alice]: "Hello!" })";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto spk = std::dynamic_pointer_cast<Speak>(cmd);
+    EXPECT_NE(spk, nullptr);
+    EXPECT_EQ(spk->speaker->name.value, 1);
+    EXPECT_EQ(spk->speaker->State.type, TokenType::TOKEN_EMPTY);
+    EXPECT_EQ(spk->message->str.value, 0);
   }
 }

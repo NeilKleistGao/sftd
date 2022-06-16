@@ -103,7 +103,7 @@ struct Assign : public Command {
 
 struct Speaker {
   Token name;
-  Token State;
+  Token State = Token{TokenType::TOKEN_EMPTY};
 };
 
 struct Message : public Command {
