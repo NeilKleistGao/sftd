@@ -29,6 +29,7 @@
 
 #include "command.h"
 #include "grammar/ast.h"
+#include "translator.h"
 
 class Compiler {
 public:
@@ -44,8 +45,7 @@ private:
   long m_size;
   std::vector<char> m_header;
 
-  using BinaryDialogue = std::vector<ILCommand>;
-  std::vector<BinaryDialogue> m_auto, m_trigger, m_interact, m_other;
+  std::vector<Translator> m_auto, m_trigger, m_interact, m_other;
 
   bool m_i18n;
 

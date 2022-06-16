@@ -41,6 +41,33 @@ const char* Compiler::Compile(char* p_content, unsigned long p_length, const cha
 
     GenerateI18NFiles(program, p_i18n_prefix);
     GenerateHeader();
+
+    auto cur = program->dialogues;
+    while (cur != nullptr) {
+      auto d = cur->dialogue;
+      auto translator = Translator{};
+      translator.TranslateDialogue(d);
+
+      switch (d->type.type) {
+      case TokenType::TOKEN_EMPTY:
+        m_other.push_back(translator);
+        break;
+      case TokenType::TOKEN_INTERACT:
+        m_interact.push_back(translator);
+        break;
+      case TokenType::TOKEN_TRIGGER:
+        m_trigger.push_back(translator);
+        break;
+      case TokenType::TOKEN_AUTO:
+        m_auto.push_back(translator);
+        break;
+      default:
+        // TODO:
+        break;
+      }
+
+      cur = cur->next;
+    }
   }
   catch (...) {
     // TODO: throw

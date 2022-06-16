@@ -23,10 +23,12 @@
 
 #include "translator.h"
 
-#include <algorithm>
+void Translator::TranslateDialogue(const std::shared_ptr<Dialogue>& p_dialogue) {
+  if (p_dialogue->condition != nullptr) {
+    auto res = TranslateExpress(p_dialogue->condition);
+  }
+}
 
-#include "tables/constant_table.h"
-
-std::vector<ILCommand>& Translator::TranslateDialogue(const std::shared_ptr<Dialogue>& p_dialogue) {
+int Translator::TranslateExpress(const std::shared_ptr<Expression>& p_exp) {
 
 }

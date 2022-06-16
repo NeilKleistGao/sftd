@@ -32,16 +32,19 @@
 
 class Translator {
 public:
-  explicit Translator() = default;
+  Translator() : m_temp_variable_count(0) { };
   ~Translator() = default;
-  Translator(const Translator&) = delete;
-  Translator& operator=(const Translator&) = delete;
-  Translator(Translator&&) = delete;
-  Translator& operator=(Translator&&) = delete;
 
-  std::vector<ILCommand>& TranslateDialogue(const std::shared_ptr<Dialogue>& p_dialogue);
+  void TranslateDialogue(const std::shared_ptr<Dialogue>& p_dialogue);
+
+  inline std::vector<ILCommand>& Access() {
+    return m_pool;
+  }
 private:
   std::vector<ILCommand> m_pool;
+  int m_temp_variable_count;
+
+  int TranslateExpress(const std::shared_ptr<Expression>& p_exp);
 };
 
 #endif // SFTD_TRANSLATOR_H

@@ -77,28 +77,10 @@ Parameters:
 - String's ID
 - Next Address
 
-### Get Data From Games
-Get variables/characters from the game
-
-OperatorID: 9(variables), 10(characters)
-
-Parameters:
-- Data's name(ID in symbol table)
-
-### Set Data From Games
-Get variables/characters from the game
-
-OperatorID: 11
-
-Parameters:
-- Data's name(ID in symbol table)
-- Data's type(0 -> in memory, 1 -> string)
-- Data's value
-
 ### Play Animation
 Play animation.
 
-OperatorID: 12
+OperatorID: 9
 
 Parameters:
 - Target's name
@@ -108,11 +90,31 @@ Parameters:
 ### Play Sound
 Play sound effect.
 
-OperatorID: 13
+OperatorID: 10
 
 Parameters:
 - Type(0 -> in memory, 1 -> string)
 - Sound's name
+
+### Move
+Move a character to another place.
+
+OperatorID: 11, 12
+
+Parameters:
+- Character ID
+- Position X
+- Position Y
+- Time(for Operator 26)
+
+### Conditions
+Jump by the given condition.
+
+OperatorID: 13
+
+Parameters:
+- Condition's value
+- False address
 
 ### Calculations
 Calculate.
@@ -127,32 +129,10 @@ Parameters:
 - Second Expression type(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
 - Second parameter(except 19, 22, 23)
 
-
-### Conditions
-Jump by the given condition.
-
-OperatorID: 24
-
-Parameters:
-- Condition's value
-- True address
-- False address
-
-### Move
-Move a character to another place.
-
-OperatorID: 25, 26
-
-Parameters:
-- Character ID
-- Position X
-- Position Y
-- Time(for Operator 26)
-
 ### Delay
 Wait for seconds.
 
-OperatorID: 27
+OperatorID: 24
 
 Parameters:
 - Time(in seconds)
@@ -161,7 +141,7 @@ Parameters:
 ### Publish
 Publish an event.
 
-OperatorID: 28
+OperatorID: 25
 
 Parameters:
 - Event name
