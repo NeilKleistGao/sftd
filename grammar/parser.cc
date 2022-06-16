@@ -527,7 +527,7 @@ std::shared_ptr<Move> Parser::ParseMove() {
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_COMMA) {
     // TODO: throw
-  }+
+  }
 
   move->y = ParseExpression0();
 
@@ -714,15 +714,11 @@ std::shared_ptr<Publish> Parser::ParsePublish() {
 
   res->name = tk;
   tk = m_lex.LookNext();
-  if (tk.type == TokenType::TOKEN_COMMA) {
+  while (tk.type == TokenType::TOKEN_COMMA) {
     m_lex.GetNext();
-    res->p1 = ParseExpression0();
+    res->params.push_back(ParseExpression0());
 
     tk = m_lex.LookNext();
-    if (tk.type == TokenType::TOKEN_COMMA) {
-      m_lex.GetNext();
-      res->p2 = ParseExpression0();
-    }
   }
 
   tk = m_lex.GetNext();

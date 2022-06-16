@@ -119,8 +119,7 @@ struct Speak : public Command {
 
 struct Publish : public Command {
   Token name;
-  std::shared_ptr<Expression> p1;
-  std::shared_ptr<Expression> p2;
+  std::vector<std::shared_ptr<Expression>> params;
 };
 
 struct Content {
