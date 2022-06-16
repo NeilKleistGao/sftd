@@ -226,5 +226,9 @@ TEST(Grammar, CommandTest) {
     auto cmd = ast->dialogues->dialogue->content->command;
     auto move = std::dynamic_pointer_cast<Move>(cmd);
     EXPECT_NE(move, nullptr);
+    EXPECT_EQ(move->name.value, 1);
+    EXPECT_EQ(move->time->value.value, 4);
+    EXPECT_EQ(move->x->value.value, 2);
+    EXPECT_EQ(move->y->value.value, 0);
   }
 }

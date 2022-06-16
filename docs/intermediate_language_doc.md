@@ -34,7 +34,7 @@ suffix: `.dialogue` -> `.dd` (Dialogue Data)
 ## Commands
 ### Format
 `OperatorID` + [`OperationParameters`]
-`OperatorID`: 4 Byte
+`OperatorID`: 4 Bytes
 
 ### Start Dialogues
 Start a dialogue.
@@ -155,16 +155,17 @@ Parameters:
 ### Publish
 Publish an event.
 
-OperatorID: 28, 29, 30
+OperatorID: 28
 
 Parameters:
 - Event name
-- First parameter(for 29, 30)
-- Second parameter(for 30)
+- Parameter count
+- parameter types(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
+- parameters
 
 ### End
 End a dialogue.
 
-OperatorID: 31
+OperatorID: 255
 
 Parameters: null
