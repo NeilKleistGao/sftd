@@ -18,7 +18,7 @@ suffix: `.dialogue` -> `.dd` (Dialogue Data)
 - Enable I18N: 2 Bytes
 - Symbol table Size: 4 Bytes
 - Symbol table
-- The number of strings(not in dialogues): 4 Bytes
+- The number of strings: 4 Bytes
 - Strings list
 - The number of auto dialogues: 4 Bytes
   Dialogues: an int(4 Bytes) for the number of commands and the commands blocks

@@ -134,6 +134,19 @@ void Compiler::GenerateHeader() {
     }
   }
 
+  // String Table
+  {
+    auto table = ConstantTable::GetInstance();
+    auto size = table->GetSize();
+    PushIntInHeader(size);
+
+    for (int i = 0; i < size; ++i) {
+      std::string str = table->Find(i);
+      PushIntInHeader(i);
+      PushStringInHead(str);
+    }
+  }
+
   m_size += m_header.size();
 }
 

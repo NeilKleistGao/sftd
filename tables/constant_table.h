@@ -38,6 +38,10 @@ public:
   }
 
   void Replace(int p_id, const std::string& p_str);
+
+  inline int GetSize() const {
+    return m_visit.size();
+  }
 private:
   std::unordered_map<std::string, int> m_visit;
   using ConstantData = std::unordered_map<std::string, int>::const_iterator;
