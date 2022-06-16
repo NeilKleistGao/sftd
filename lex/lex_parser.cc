@@ -208,7 +208,7 @@ Token LexParser::ParseOperator() {
 
 Token LexParser::ParseKeywords() {
   std::string keyword;
-  while (HasNext() && (std::isalpha(*m_current) || *m_current == '_')) {
+  while (HasNext() && (std::isalnum(*m_current) || *m_current == '_')) {
     keyword += *m_current;
     ++m_current;
   }
