@@ -522,17 +522,12 @@ std::shared_ptr<Move> Parser::ParseMove() {
     // TODO: throw
   }
 
-  tk = m_lex.GetNext();
-  if (tk.type != TokenType::TOKEN_LEFT_PARENTHESES) {
-    // TODO: throw
-  }
-
   move->x = ParseExpression0();
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_COMMA) {
     // TODO: throw
-  }
+  }+
 
   move->y = ParseExpression0();
 

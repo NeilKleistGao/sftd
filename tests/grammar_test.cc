@@ -214,5 +214,17 @@ TEST(Grammar, CommandTest) {
     auto cmd = ast->dialogues->dialogue->content->command;
     auto anime = std::dynamic_pointer_cast<Animate>(cmd);
     EXPECT_NE(anime, nullptr);
+    EXPECT_EQ(anime->name.value, 1);
+    EXPECT_EQ(anime->anim->value.value, 0);
+  }
+
+  {
+    const char* PROGRAM = "dialogue test { move @bob (2, 0) in 4 }";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto move = std::dynamic_pointer_cast<Move>(cmd);
+    EXPECT_NE(move, nullptr);
   }
 }
