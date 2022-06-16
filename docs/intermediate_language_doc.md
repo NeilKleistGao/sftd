@@ -14,19 +14,19 @@
 
 ## Binary Structure
 suffix: `.dialogue` -> `.dd` (Dialogue Data)
-- Magic number: 4 Bytes
+- Magic number: 2 Bytes
+- Enable I18N: 2 Bytes
 - Symbol table Size: 4 Bytes
 - Symbol table
-- The number of strings: 4 Bytes
+- The number of strings(not in dialogues): 4 Bytes
 - Strings list
 - The number of auto dialogues: 4 Bytes
-- Auto dialogues start addresses
+  Dialogues: an int(4 Bytes) for the number of commands and the commands blocks
 - The number of trigger dialogues: 4 Bytes
-- Trigger dialogues start addresses
+  Dialogues: an int(4 Bytes) for the number of commands and the commands blocks
 - The number of interact dialogues: 4 Bytes
-- Interact dialogues start addresses
+  Dialogues: an int(4 Bytes) for the number of commands and the commands blocks
 - The number of other dialogues: 4 Bytes
-- Other dialogues start addresses
 - Dialogues: an int(4 Bytes) for the number of commands and the commands blocks
 
 

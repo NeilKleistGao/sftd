@@ -25,6 +25,7 @@
 
 #include "tables/constant_table.h"
 #include "tables/symbol_table.h"
+#include "tables/i18n_table.h"
 #include "exceptions/grammar_exceptions.h"
 
 Parser::Parser(const char* p_buffer, unsigned long p_length) : m_lex(p_buffer, p_length) {
@@ -661,6 +662,7 @@ std::shared_ptr<Message> Parser::ParseMessage() {
     throw GrammarMissing{tk.line, "string"};
   }
 
+  I18NTable::GetInstance()->Insert(ConstantTable::GetInstance()->Find(tk.value));
   res->str = tk;
   tk = m_lex.LookNext();
   if (tk.type == TokenType::TOKEN_IN) {
@@ -746,6 +748,7 @@ std::shared_ptr<Option> Parser::ParseOption() {
   }
 
   res->hint = tk;
+  I18NTable::GetInstance()->Insert(ConstantTable::GetInstance()->Find(tk.value));
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_COLON) {

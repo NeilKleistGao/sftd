@@ -19,47 +19,31 @@
 * SOFTWARE.
  */
 
-/// @file compiler.cc
+/// @file i18n_table.h
 
-#include "compiler.h"
+#ifndef SFTD_I18N_TABLE_H
+#define SFTD_I18N_TABLE_H
 
-#include <algorithm>
-#include <unordered_map>
+#include <string>
+#include <vector>
+#include <unordered_set>
 
-#include "grammar/parser.h"
-#include "tables/symbol_table.h"
-#include "tables/constant_table.h"
+#include "sugars/singleton.hpp"
 
-const char* Compiler::Compile(char* p_content, unsigned long p_length, const char* p_i18n_prefix) {
-  Parser parser{p_content, p_length};
-  auto program = parser.GenerateAST();
+class I18NTable : public Singleton<I18NTable> {
+public:
+  void Insert(const std::string& p_str);
 
-  GenerateI18NFiles(program, p_i18n_prefix);
-  GenerateHeader();
-}
-
-void Compiler::Write(char* p_buffer, unsigned long p_length) {
-
-}
-
-void Compiler::GenerateI18NFiles(const std::shared_ptr<Program>& p_program, const std::string& p_prefix) {
-  auto i18n = p_program->i18n;
-  if (i18n == nullptr) {
-    return;
+  inline unsigned long GetSize() const {
+    return m_pool.size();
   }
 
-  m_i18n = true;
-  std::vector<std::string> languages;
-  auto ct = ConstantTable::GetInstance();
-
-  for (const auto& op : i18n->options) {
-    languages.push_back(ct->Find(op.value));
+  inline std::string GetString(int p_id) const {
+    return m_pool[p_id];
   }
+private:
+  std::vector<std::string> m_pool;
+  std::unordered_set<std::string> m_visit;
+};
 
-  std::sort(languages.begin(), languages.end());
-  languages.erase(std::unique(languages.begin(), languages.end()), languages.end());
-}
-
-void Compiler::GenerateHeader() {
-
-}
+#endif // SFTD_I18N_TABLE_H

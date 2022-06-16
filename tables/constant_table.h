@@ -36,6 +36,8 @@ public:
   inline void Clear() {
     m_table.clear(); m_visit.clear();
   }
+
+  void Replace(int p_id, const std::string& p_str);
 private:
   std::unordered_map<std::string, int> m_visit;
   using ConstantData = std::unordered_map<std::string, int>::const_iterator;

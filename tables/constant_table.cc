@@ -44,3 +44,14 @@ std::string ConstantTable::Find(int p_id) {
 
   return "";
 }
+
+void ConstantTable::Replace(int p_id, const std::string& p_str) {
+  if (m_table.find(p_id) == m_table.end()) {
+    return;
+  }
+
+  auto origin = m_table[p_id];
+  m_visit.erase(origin);
+  m_visit[p_str] = p_id;
+  m_table[p_id] = m_visit.find(p_str);
+}

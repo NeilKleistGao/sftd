@@ -30,9 +30,10 @@ extern "C" {
    * Compile dialogue files.
    * @param p_input: input filename
    * @param p_output: output filename
+   * @param p_i18n_prefix: translation files' prefix
    * @return const char*, a string standing for errors(null if no error)
    */
-  const char* Compile(const char* p_input, const char* p_output) {
+  const char* Compile(const char* p_input, const char* p_output, const char* p_i18n_prefix) {
     FILE* fp = fopen(p_input, "r");
     if (fp == nullptr) {
       return "File doesn't exist.";
@@ -46,7 +47,7 @@ extern "C" {
     fclose(fp);
 
     Compiler compiler{};
-    const char* res = compiler.Compile(buffer, size);
+    const char* res = compiler.Compile(buffer, size, p_i18n_prefix);
     delete[] buffer; buffer = nullptr;
     if (res != nullptr) {
       return res;

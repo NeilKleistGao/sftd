@@ -24,19 +24,33 @@
 #ifndef SFTD_COMPILER_H
 #define SFTD_COMPILER_H
 
+#include <vector>
+#include <memory>
+
+#include "command.h"
+#include "grammar/ast.h"
+
 class Compiler {
 public:
-  Compiler() : m_size(4), m_string_size(4), m_symbol_size(4) {};
+  Compiler() : m_size(0), m_i18n(false) {};
 
-  const char* Compile(char* p_content, long p_length);
-  void Write(char* p_buffer, long p_length);
+  const char* Compile(char* p_content, unsigned long p_length, const char* p_i18n_prefix);
+  void Write(char* p_buffer, unsigned long p_length);
 
   inline long GetSize() const {
     return m_size;
   }
 private:
   long m_size;
-  long m_symbol_size, m_string_size;
+  std::vector<char> m_header;
+
+  using BinaryDialogue = std::vector<ILCommand>;
+  std::vector<BinaryDialogue> m_auto, m_trigger, m_interact, m_other;
+
+  bool m_i18n;
+
+  void GenerateI18NFiles(const std::shared_ptr<Program>& p_program, const std::string& p_prefix);
+  void GenerateHeader();
 };
 
 #endif // SFTD_COMPILER_H
