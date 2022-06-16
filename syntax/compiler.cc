@@ -47,8 +47,13 @@ const char* Compiler::Compile(char* p_content, unsigned long p_length, const cha
   }
 }
 
-void Compiler::Write(char* p_buffer, unsigned long p_length) {
+void Compiler::Write(char* p_buffer) {
+  for (char c : m_header) {
+    *p_buffer = c;
+    ++p_buffer;
+  }
 
+  // TODO:
 }
 
 void Compiler::GenerateI18NFiles(const std::shared_ptr<Program>& p_program, const std::string& p_prefix) {
@@ -128,6 +133,8 @@ void Compiler::GenerateHeader() {
       PushStringInHead(entry);
     }
   }
+
+  m_size += m_header.size();
 }
 
 void Compiler::PushStringInHead(const std::string& p_str) {

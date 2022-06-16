@@ -55,7 +55,7 @@ extern "C" {
 
     size = compiler.GetSize();
     buffer = new char[size];
-    compiler.Write(buffer, size);
+    compiler.Write(buffer);
     fp = fopen(p_input, "wb");
     if (fp == nullptr) {
       return "Can't write the file.";

@@ -68,3 +68,71 @@ TEST(CompileTest, I18NTest) {
     EXPECT_EQ(fp, nullptr);
   }
 }
+
+TEST(CompileTest, SymbolTableTest) {
+  {
+    const char* PROGRAM = "";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+    EXPECT_EQ(buffer[0], static_cast<char>(0xAE));
+    EXPECT_EQ(buffer[1], static_cast<char>(0x86));
+    EXPECT_EQ(buffer[2], 0);
+    EXPECT_EQ(buffer[3], 0);
+
+    EXPECT_EQ(buffer[4], 0);
+    EXPECT_EQ(buffer[5], 0);
+    EXPECT_EQ(buffer[6], 0);
+    EXPECT_EQ(buffer[7], 0);
+  }
+
+  {
+    const char* PROGRAM = "dialogue test1{}"
+                          "dialogue test2{}";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+    EXPECT_EQ(buffer[4], 0);
+    EXPECT_EQ(buffer[5], 0);
+    EXPECT_EQ(buffer[6], 0);
+    EXPECT_EQ(buffer[7], 2);
+
+    EXPECT_EQ(buffer[8], 0);
+    EXPECT_EQ(buffer[9], 0);
+    EXPECT_EQ(buffer[10], 0);
+    EXPECT_EQ(buffer[11], 0);
+
+    EXPECT_EQ(buffer[12], 0);
+    EXPECT_EQ(buffer[13], 0);
+    EXPECT_EQ(buffer[14], 0);
+    EXPECT_EQ(buffer[15], 5);
+
+    EXPECT_EQ(buffer[16], 't');
+    EXPECT_EQ(buffer[17], 'e');
+    EXPECT_EQ(buffer[18], 's');
+    EXPECT_EQ(buffer[19], 't');
+    EXPECT_EQ(buffer[20], '1');
+
+    EXPECT_EQ(buffer[21], 0);
+    EXPECT_EQ(buffer[22], 0);
+    EXPECT_EQ(buffer[23], 0);
+    EXPECT_EQ(buffer[24], 1);
+
+    EXPECT_EQ(buffer[25], 0);
+    EXPECT_EQ(buffer[26], 0);
+    EXPECT_EQ(buffer[27], 0);
+    EXPECT_EQ(buffer[28], 5);
+
+    EXPECT_EQ(buffer[29], 't');
+    EXPECT_EQ(buffer[30], 'e');
+    EXPECT_EQ(buffer[31], 's');
+    EXPECT_EQ(buffer[32], 't');
+    EXPECT_EQ(buffer[33], '2');
+  }
+}

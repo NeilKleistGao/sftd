@@ -35,7 +35,7 @@ public:
   Compiler() : m_size(0), m_i18n(false) {};
 
   const char* Compile(char* p_content, unsigned long p_length, const char* p_i18n_prefix);
-  void Write(char* p_buffer, unsigned long p_length);
+  void Write(char* p_buffer);
 
   inline long GetSize() const {
     return m_size;
