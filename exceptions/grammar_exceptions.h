@@ -31,4 +31,9 @@ public:
   GrammarMissing(int p_line, const std::string& p_missing);
 };
 
+class UnknownToken : public BasicException {
+public:
+  explicit UnknownToken(int p_line);
+};
+
 #endif // SFTD_GRAMMAR_EXCEPTIONS_H

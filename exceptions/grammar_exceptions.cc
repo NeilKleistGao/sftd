@@ -26,3 +26,7 @@
 GrammarMissing::GrammarMissing(int p_line, const std::string& p_missing) : BasicException(p_line) {
   m_msg = "Line " + std::to_string(m_line) + ": missing " + p_missing;
 }
+
+UnknownToken::UnknownToken(int p_line) : BasicException(p_line) {
+  m_msg = "Line " + std::to_string(m_line) + ": unknown symbol.";
+}

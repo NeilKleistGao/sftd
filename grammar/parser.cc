@@ -25,6 +25,7 @@
 
 #include "tables/constant_table.h"
 #include "tables/symbol_table.h"
+#include "exceptions/grammar_exceptions.h"
 
 Parser::Parser(const char* p_buffer, unsigned long p_length) : m_lex(p_buffer, p_length) {
   ConstantTable::GetInstance()->Clear();
@@ -46,7 +47,7 @@ std::shared_ptr<Program> Parser::GenerateAST() {
 std::shared_ptr<I18NOptions> Parser::ParseI18NInfo() {
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_LEFT_CURLY) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "{"};
   }
 
   auto options = std::make_shared<I18NOptions>();
@@ -59,11 +60,11 @@ std::shared_ptr<I18NOptions> Parser::ParseI18NInfo() {
         break;
       }
       else if (tk.type != TokenType::TOKEN_COMMA) {
-        // TODO: throw
+        throw GrammarMissing{tk.line, ","};
       }
     }
     else {
-      // TODO: throw
+      throw GrammarMissing{tk.line, "string"};
     }
   }
 
@@ -88,7 +89,7 @@ std::shared_ptr<Dialogues> Parser::ParseDialogues() {
     dialogues->dialogue = ParseDialogue();
   }
   else {
-    // TODO: throw
+    throw GrammarMissing{head.line, "dialogue"};
   }
 
   dialogues->dialogue->type = type;
@@ -107,35 +108,35 @@ std::shared_ptr<Dialogue> Parser::ParseDialogue() {
     dialogue->name = tk;
   }
   else {
-    //TODO: throw
+    throw GrammarMissing{tk.line, "variable"};
   }
 
   tk = m_lex.GetNext();
   if (tk.type == TokenType::TOKEN_WHEN) {
     tk = m_lex.GetNext();
     if (tk.type != TokenType::TOKEN_LEFT_PARENTHESES) {
-      // TODO: throw
+      throw GrammarMissing{tk.line, "("};
     }
 
     dialogue->condition = ParseExpression0();
 
     tk = m_lex.GetNext();
     if (tk.type != TokenType::TOKEN_RIGHT_PARENTHESES) {
-      // TODO: throw
+      throw GrammarMissing{tk.line, ")"};
     }
 
     tk = m_lex.GetNext();
   }
 
   if (tk.type != TokenType::TOKEN_LEFT_CURLY) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "{"};
   }
 
   dialogue->content = ParseContent();
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_RIGHT_CURLY) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "}"};
   }
 
   return dialogue;
@@ -205,7 +206,7 @@ std::shared_ptr<Expression> Parser::ParseExpression2() {
     exp->op = OperatorType::EQUAL;
     tk = m_lex.GetNext();
     if (tk.type != TokenType::TOKEN_EQUAL) {
-      // TODO: throw
+      throw GrammarMissing{tk.line, "="};
     }
 
     exp->right = ParseExpression3();
@@ -218,7 +219,7 @@ std::shared_ptr<Expression> Parser::ParseExpression2() {
   if (tk.type == TokenType::TOKEN_EQUAL) {
     tk = m_lex.GetNext();
     if (tk.type != TokenType::TOKEN_EQUAL) {
-      // TODO: throw
+      throw GrammarMissing{tk.line, "="};
     }
 
     auto p = std::make_shared<Expression>();
@@ -395,7 +396,7 @@ std::shared_ptr<Expression> Parser::ParseExpression8() {
   case TokenType::TOKEN_DOLLAR: {
     tk = m_lex.GetNext();
     if (tk.type != TokenType::TOKEN_VARIABLE) {
-      // TODO: throw
+      throw GrammarMissing{tk.line, "variable"};
     }
 
     res->value = tk;
@@ -405,12 +406,12 @@ std::shared_ptr<Expression> Parser::ParseExpression8() {
     res = ParseExpression0();
     tk = m_lex.GetNext();
     if (tk.type != TokenType::TOKEN_RIGHT_PARENTHESES) {
-      // TODO: throw
+      throw GrammarMissing{tk.line, ")"};
     }
     break;
   }
   default:
-    // TODO: throw
+    throw UnknownToken{tk.line};
     break;
   }
 
@@ -469,7 +470,7 @@ std::shared_ptr<Command> Parser::ParseCommand() {
   case TokenType::TOKEN_LEFT_PARENTHESES:
     return ParsePublish();
   default:
-    // TODO: throw
+    throw UnknownToken{tk.line};
     break;
   }
 }
@@ -480,12 +481,12 @@ std::shared_ptr<Animate> Parser::ParseAnimate() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_AT) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "@"};
   }
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_VARIABLE) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "variable"};
   }
 
   anim->name = tk;
@@ -507,38 +508,38 @@ std::shared_ptr<Move> Parser::ParseMove() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_AT) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "@"};
   }
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_VARIABLE) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "variable"};
   }
 
   move->name = tk;
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_LEFT_PARENTHESES) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "("};
   }
 
   move->x = ParseExpression0();
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_COMMA) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, ","};
   }
 
   move->y = ParseExpression0();
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_RIGHT_PARENTHESES) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, ")"};
   }
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_IN) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "in"};
   }
 
   move->time = ParseExpression0();
@@ -559,25 +560,25 @@ std::shared_ptr<If> Parser::ParseIf() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_LEFT_PARENTHESES) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "("};
   }
 
   res->condition = ParseExpression0();
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_RIGHT_PARENTHESES) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, ")"};
   }
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_LEFT_CURLY) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "{"};
   }
 
   res->true_block = ParseContent();
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_RIGHT_CURLY) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "}"};
   }
 
   tk = m_lex.LookNext();
@@ -592,11 +593,11 @@ std::shared_ptr<If> Parser::ParseIf() {
       res->false_block = ParseContent();
       tk = m_lex.GetNext();
       if (tk.type != TokenType::TOKEN_RIGHT_CURLY) {
-        // TODO: throw
+        throw GrammarMissing{tk.line, "}"};
       }
     }
     else {
-      // TODO: throw
+      throw UnknownToken{tk.line};
     }
   }
 
@@ -609,14 +610,14 @@ std::shared_ptr<Select> Parser::ParseSelect() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_LEFT_CURLY) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "{"};
   }
 
   res->option = ParseOption();
 
   tk = m_lex.LookNext();
   if (tk.type != TokenType::TOKEN_RIGHT_CURLY) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "}"};
   }
 
   m_lex.GetNext();
@@ -629,7 +630,7 @@ std::shared_ptr<Goto> Parser::ParseGoto() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_VARIABLE) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "variable"};
   }
 
   res->name = tk;
@@ -642,7 +643,7 @@ std::shared_ptr<Use> Parser::ParseUse() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_VARIABLE) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "variable"};
   }
 
   res->name = tk;
@@ -654,7 +655,7 @@ std::shared_ptr<Message> Parser::ParseMessage() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_STRING) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "string"};
   }
 
   res->str = tk;
@@ -673,7 +674,7 @@ std::shared_ptr<Speak> Parser::ParseSpeak() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_COLON) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, ":"};
   }
 
   tk = m_lex.LookNext();
@@ -683,7 +684,7 @@ std::shared_ptr<Speak> Parser::ParseSpeak() {
 
     tk = m_lex.GetNext();
     if (tk.type != TokenType::TOKEN_RIGHT_CURLY) {
-      // TODO: throw
+      throw GrammarMissing{tk.line, "}"};
     }
   }
   else {
@@ -700,7 +701,7 @@ std::shared_ptr<Assign> Parser::ParseAssign() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_EQUAL) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "="};
   }
 
   res->expression = ParseExpression0();
@@ -713,7 +714,7 @@ std::shared_ptr<Publish> Parser::ParsePublish() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_VARIABLE) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "variable"};
   }
 
   res->name = tk;
@@ -727,7 +728,7 @@ std::shared_ptr<Publish> Parser::ParsePublish() {
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_RIGHT_PARENTHESES) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "}"};
   }
 
   return res;
@@ -738,14 +739,14 @@ std::shared_ptr<Option> Parser::ParseOption() {
   Token tk = m_lex.GetNext();
 
   if (tk.type != TokenType::TOKEN_STRING) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "string"};
   }
 
   res->hint = tk;
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_COLON) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, ":"};
   }
 
   tk = m_lex.LookNext();
@@ -754,7 +755,7 @@ std::shared_ptr<Option> Parser::ParseOption() {
     res->res = ParseContent();
     tk = m_lex.GetNext();
     if (tk.type != TokenType::TOKEN_RIGHT_CURLY) {
-      // TODO: throw
+      throw GrammarMissing{tk.line, "}"};
     }
   }
   else {
@@ -775,7 +776,7 @@ std::shared_ptr<Speaker> Parser::ParseSpeaker() {
 
   Token tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_VARIABLE) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "variable"};
   }
 
   res->name = tk;
@@ -784,20 +785,20 @@ std::shared_ptr<Speaker> Parser::ParseSpeaker() {
     m_lex.GetNext();
     tk = m_lex.GetNext();
     if (tk.type != TokenType::TOKEN_VARIABLE) {
-      // TODO: throw
+      throw GrammarMissing{tk.line, "variable"};
     }
 
     res->State = tk;
 
     tk = m_lex.GetNext();
     if (tk.type != TokenType::TOKEN_RIGHT_PARENTHESES) {
-      // TODO: throw
+      throw GrammarMissing{tk.line, ")"};
     }
   }
 
   tk = m_lex.GetNext();
   if (tk.type != TokenType::TOKEN_RIGHT_SQUARE) {
-    // TODO: throw
+    throw GrammarMissing{tk.line, "]"};
   }
 
   return res;
