@@ -650,7 +650,6 @@ std::shared_ptr<Use> Parser::ParseUse() {
 }
 
 std::shared_ptr<Message> Parser::ParseMessage() {
-  m_lex.GetNext();
   auto res = std::make_shared<Message>();
 
   Token tk = m_lex.GetNext();

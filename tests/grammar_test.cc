@@ -316,7 +316,7 @@ TEST(Grammar, SelectTest) {
   {
     const char* PROGRAM = "dialogue test { select {\n"
                           "            \"cookie\": use GetCookie\n"
-                          "            \"cake\": {use GetCake}\n"
+                          "            \"cake\": {goto GetCake}\n"
                           "        } }";
     Parser parser{PROGRAM, std::strlen(PROGRAM)};
     auto ast = parser.GenerateAST();
@@ -324,5 +324,31 @@ TEST(Grammar, SelectTest) {
     auto cmd = ast->dialogues->dialogue->content->command;
     auto select = std::dynamic_pointer_cast<Select>(cmd);
     EXPECT_NE(select, nullptr);
+    EXPECT_NE(select->option, nullptr);
+
+    auto opt1 = select->option;
+    auto opt2 = opt1->next;
+    EXPECT_NE(opt2, nullptr);
+    EXPECT_EQ(opt1->hint.value, 0);
+
+    auto use = std::dynamic_pointer_cast<Use>(opt1->command);
+    EXPECT_NE(use, nullptr);
+    EXPECT_EQ(use->name.value, 1);
+
+    auto gt = std::dynamic_pointer_cast<Goto>(opt2->res->command);
+    EXPECT_NE(gt, nullptr);
+    EXPECT_EQ(gt->name.value, 2);
+  }
+}
+
+TEST(Grammar, TextTest) {
+  {
+    const char* PROGRAM = R"(dialogue test { "Hello!" })";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto msg = std::dynamic_pointer_cast<Message>(cmd);
+    EXPECT_NE(msg, nullptr);
   }
 }
