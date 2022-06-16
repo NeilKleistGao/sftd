@@ -19,66 +19,16 @@
 * SOFTWARE.
  */
 
-/// @file token.h
+/// @file grammar_exceptions.h
 
-#ifndef SFTD_TOKEN_H
-#define SFTD_TOKEN_H
+#ifndef SFTD_GRAMMAR_EXCEPTIONS_H
+#define SFTD_GRAMMAR_EXCEPTIONS_H
 
-enum class TokenType {
-  TOKEN_EOF = -1,
-  TOKEN_DIALOGUE = 0,
-  TOKEN_WHEN,
-  TOKEN_SELECT,
-  TOKEN_IF,
-  TOKEN_ELSE,
-  TOKEN_GOTO,
-  TOKEN_USE,
-  TOKEN_IN,
-  TOKEN_NULL,
-  TOKEN_AND,
-  TOKEN_OR,
-  TOKEN_NOT,
-  TOKEN_ADD,
-  TOKEN_SUB,
-  TOKEN_MUL,
-  TOKEN_DIV,
-  TOKEN_MOD,
-  TOKEN_EQUAL,
-  TOKEN_COLON,
-  TOKEN_LEFT_SQUARE,
-  TOKEN_RIGHT_SQUARE,
-  TOKEN_LEFT_PARENTHESES,
-  TOKEN_RIGHT_PARENTHESES,
-  TOKEN_LEFT_CURLY,
-  TOKEN_RIGHT_CURLY,
-  TOKEN_STRING,
-  TOKEN_FLOAT,
-  TOKEN_INT,
-  TOKEN_BOOL,
-  TOKEN_DOLLAR,
-  TOKEN_SHARP,
-  TOKEN_AT,
-  TOKEN_LESS,
-  TOKEN_GREATER,
-  TOKEN_VARIABLE,
-  TOKEN_SOUND,
-  TOKEN_COMMA,
-  TOKEN_MOVE,
-  TOKEN_ANIMATE,
-  TOKEN_DELAY,
-  TOKEN_INTERACT,
-  TOKEN_TRIGGER,
-  TOKEN_AUTO,
-  TOKEN_EMPTY
+#include "basic_exception.h"
+
+class GrammarMissing : public BasicException {
+public:
+  GrammarMissing(int p_line, const std::string& p_missing);
 };
 
-struct Token {
-  TokenType type{};
-  int value{};
-  int line{};
-
-  Token() = default;
-  explicit Token(TokenType p_type, int p_value = 0, int p_line = 0) : type(p_type), value(p_value), line(p_line) {}
-};
-
-#endif // SFTD_TOKEN_H
+#endif // SFTD_GRAMMAR_EXCEPTIONS_H

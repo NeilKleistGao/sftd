@@ -266,6 +266,7 @@ Token LexParser::LookNext() {
     m_next = ParseOperator();
   }
 
+  m_next->line = m_line;
   return m_next.value();
 }
 
