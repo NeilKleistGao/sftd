@@ -469,6 +469,9 @@ std::shared_ptr<Command> Parser::ParseCommand() {
     break;
   case TokenType::TOKEN_LEFT_PARENTHESES:
     return ParsePublish();
+  case TokenType::TOKEN_RIGHT_CURLY:
+    return nullptr;
+    break;
   default:
     throw UnknownToken{tk.line};
     break;
