@@ -28,7 +28,6 @@
 
 #include "sugars/singleton.hpp"
 
-
 class SymbolTable : public Singleton<SymbolTable> {
 public:
   int Insert(const std::string& p_str);
@@ -36,6 +35,12 @@ public:
   inline void Clear() {
     m_table.clear(); m_visit.clear();
   }
+
+  inline int GetSize() const {
+    return m_visit.size();
+  }
+
+  std::string GetEntry(int p_id);
 private:
   std::unordered_map<std::string, int> m_visit;
   using SymbolData = std::unordered_map<std::string, int>::const_iterator;

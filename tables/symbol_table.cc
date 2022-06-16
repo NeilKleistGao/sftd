@@ -35,3 +35,11 @@ int SymbolTable::Insert(const std::string& p_str) {
   m_table[id] = m_visit.find(p_str);
   return id;
 }
+
+std::string SymbolTable::GetEntry(int p_id) {
+  if (m_table.find(p_id) != m_table.end()) {
+    return m_table[p_id]->first;
+  }
+
+  return "";
+}

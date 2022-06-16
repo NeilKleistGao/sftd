@@ -43,7 +43,7 @@ const char* Compiler::Compile(char* p_content, unsigned long p_length, const cha
     GenerateHeader();
   }
   catch (...) {
-    // TODO
+    // TODO: throw
   }
 }
 
@@ -102,5 +102,38 @@ void Compiler::GenerateI18NFiles(const std::shared_ptr<Program>& p_program, cons
 }
 
 void Compiler::GenerateHeader() {
+  // Magic Number
+  m_header.push_back(static_cast<char>(0xAE));
+  m_header.push_back(static_cast<char>(0x86));
 
+  // Enable I18N
+  if (m_i18n) {
+    m_header.push_back(static_cast<char>(0xFF));
+    m_header.push_back(static_cast<char>(0xFF));
+  }
+  else {
+    m_header.push_back(static_cast<char>(0));
+    m_header.push_back(static_cast<char>(0));
+  }
+
+  // Symbol Table
+  {
+    auto table = SymbolTable::GetInstance();
+    auto size = table->GetSize();
+    PushIntInHeader(size);
+
+    for (int i = 0; i < size; ++i) {
+      std::string entry = table->GetEntry(i);
+      PushIntInHeader(i);
+      PushStringInHead(entry);
+    }
+  }
+}
+
+void Compiler::PushStringInHead(const std::string& p_str) {
+  PushIntInHeader(p_str.size());
+
+  for (char c : p_str) {
+    m_header.push_back(c);
+  }
 }

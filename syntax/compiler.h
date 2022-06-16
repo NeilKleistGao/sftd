@@ -51,6 +51,15 @@ private:
 
   void GenerateI18NFiles(const std::shared_ptr<Program>& p_program, const std::string& p_prefix);
   void GenerateHeader();
+
+  inline void PushIntInHeader(int p_i) {
+    m_header.push_back(static_cast<char>((p_i >> 24) & 0xFF));
+    m_header.push_back(static_cast<char>((p_i >> 16) & 0xFF));
+    m_header.push_back(static_cast<char>((p_i >> 8) & 0xFF));
+    m_header.push_back(static_cast<char>(p_i & 0xFF));
+  }
+
+  void PushStringInHead(const std::string& p_str);
 };
 
 #endif // SFTD_COMPILER_H
