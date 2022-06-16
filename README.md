@@ -11,7 +11,7 @@ Game Engine Support:
 
 ## A Simple Demo
 ```
-#{"en-GB", "zh-CN"}
+#{"en_GB", "zh_CN"}
 
 dialogue GetCookie {
     [Alice]: {

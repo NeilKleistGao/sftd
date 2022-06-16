@@ -31,13 +31,20 @@
 #include "tables/symbol_table.h"
 #include "tables/constant_table.h"
 #include "tables/i18n_table.h"
+#include "exceptions/lex_exceptions.h"
+#include "exceptions/grammar_exceptions.h"
 
 const char* Compiler::Compile(char* p_content, unsigned long p_length, const char* p_i18n_prefix) {
-  Parser parser{p_content, p_length};
-  auto program = parser.GenerateAST();
+  try {
+    Parser parser{p_content, p_length};
+    auto program = parser.GenerateAST();
 
-  GenerateI18NFiles(program, p_i18n_prefix);
-  GenerateHeader();
+    GenerateI18NFiles(program, p_i18n_prefix);
+    GenerateHeader();
+  }
+  catch (...) {
+    // TODO
+  }
 }
 
 void Compiler::Write(char* p_buffer, unsigned long p_length) {
