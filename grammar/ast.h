@@ -89,11 +89,11 @@ struct Option {
   Token hint;
   std::shared_ptr<Command> command;
   std::shared_ptr<Content> res;
+  std::shared_ptr<Option> next;
 };
 
 struct Select : Command {
   std::shared_ptr<Option> option;
-  std::shared_ptr<Select> next;
 };
 
 struct Assign : public Command {

@@ -247,32 +247,32 @@ TEST(Grammar, CommandTest) {
 }
 
 TEST(Grammar, IfElseTest) {
-//  {
-//    const char* PROGRAM = "dialogue test { if ($try) {} }";
-//    Parser parser{PROGRAM, std::strlen(PROGRAM)};
-//    auto ast = parser.GenerateAST();
-//
-//    auto cmd = ast->dialogues->dialogue->content->command;
-//    auto if_cmd = std::dynamic_pointer_cast<If>(cmd);
-//    EXPECT_NE(if_cmd, nullptr);
-//    EXPECT_EQ(if_cmd->condition->value.value, 1);
-//    EXPECT_NE(if_cmd->true_block, nullptr);
-//    EXPECT_EQ(if_cmd->false_block, nullptr);
-//    EXPECT_EQ(if_cmd->another, nullptr);
-//  }
-//
-//  {
-//    const char* PROGRAM = "dialogue test { if ($try) {} else {} }";
-//    Parser parser{PROGRAM, std::strlen(PROGRAM)};
-//    auto ast = parser.GenerateAST();
-//
-//    auto cmd = ast->dialogues->dialogue->content->command;
-//    auto if_cmd = std::dynamic_pointer_cast<If>(cmd);
-//    EXPECT_NE(if_cmd, nullptr);
-//    EXPECT_NE(if_cmd->true_block, nullptr);
-//    EXPECT_NE(if_cmd->false_block, nullptr);
-//    EXPECT_EQ(if_cmd->another, nullptr);
-//  }
+  {
+    const char* PROGRAM = "dialogue test { if ($try) {} }";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto if_cmd = std::dynamic_pointer_cast<If>(cmd);
+    EXPECT_NE(if_cmd, nullptr);
+    EXPECT_EQ(if_cmd->condition->value.value, 1);
+    EXPECT_NE(if_cmd->true_block, nullptr);
+    EXPECT_EQ(if_cmd->false_block, nullptr);
+    EXPECT_EQ(if_cmd->another, nullptr);
+  }
+
+  {
+    const char* PROGRAM = "dialogue test { if ($try) {} else {} }";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto if_cmd = std::dynamic_pointer_cast<If>(cmd);
+    EXPECT_NE(if_cmd, nullptr);
+    EXPECT_NE(if_cmd->true_block, nullptr);
+    EXPECT_NE(if_cmd->false_block, nullptr);
+    EXPECT_EQ(if_cmd->another, nullptr);
+  }
 
   {
     const char* PROGRAM = "dialogue test { if ($try) {} else if ($try2) {} }";
@@ -286,7 +286,43 @@ TEST(Grammar, IfElseTest) {
     EXPECT_EQ(if_cmd->false_block, nullptr);
     EXPECT_NE(if_cmd->another, nullptr);
 
-//    auto another = if_cmd->another;
-//    EXPECT_EQ(another->condition->value.value, 2);
+    auto another = if_cmd->another;
+    EXPECT_EQ(another->condition->value.value, 2);
+    EXPECT_NE(another->true_block, nullptr);
+    EXPECT_EQ(another->false_block, nullptr);
+    EXPECT_EQ(another->another, nullptr);
+  }
+
+  {
+    const char* PROGRAM = "dialogue test { if ($try) {} else if ($try2) {} else {} }";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto if_cmd = std::dynamic_pointer_cast<If>(cmd);
+    EXPECT_NE(if_cmd, nullptr);
+    EXPECT_NE(if_cmd->true_block, nullptr);
+    EXPECT_EQ(if_cmd->false_block, nullptr);
+    EXPECT_NE(if_cmd->another, nullptr);
+
+    auto another = if_cmd->another;
+    EXPECT_NE(another->true_block, nullptr);
+    EXPECT_NE(another->false_block, nullptr);
+    EXPECT_EQ(another->another, nullptr);
+  }
+}
+
+TEST(Grammar, SelectTest) {
+  {
+    const char* PROGRAM = "dialogue test { select {\n"
+                          "            \"cookie\": use GetCookie\n"
+                          "            \"cake\": {use GetCake}\n"
+                          "        } }";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto select = std::dynamic_pointer_cast<Select>(cmd);
+    EXPECT_NE(select, nullptr);
   }
 }

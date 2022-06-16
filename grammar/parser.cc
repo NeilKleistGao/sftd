@@ -608,15 +608,15 @@ std::shared_ptr<Select> Parser::ParseSelect() {
   auto res = std::make_shared<Select>();
 
   Token tk = m_lex.GetNext();
-  if (tk.type != TokenType::TOKEN_LEFT_PARENTHESES) {
+  if (tk.type != TokenType::TOKEN_LEFT_CURLY) {
     // TODO: throw
   }
 
   res->option = ParseOption();
 
   tk = m_lex.LookNext();
-  if (tk.type != TokenType::TOKEN_RIGHT_PARENTHESES) {
-    res->next = ParseSelect();
+  if (tk.type != TokenType::TOKEN_RIGHT_CURLY) {
+    // TODO: throw
   }
 
   m_lex.GetNext();
@@ -739,6 +739,11 @@ std::shared_ptr<Option> Parser::ParseOption() {
 
   res->hint = tk;
 
+  tk = m_lex.GetNext();
+  if (tk.type != TokenType::TOKEN_COLON) {
+    // TODO: throw
+  }
+
   tk = m_lex.LookNext();
   if (tk.type == TokenType::TOKEN_LEFT_CURLY) {
     m_lex.GetNext();
@@ -751,6 +756,13 @@ std::shared_ptr<Option> Parser::ParseOption() {
   else {
     res->command = ParseCommand();
   }
+
+  tk = m_lex.LookNext();
+  if (tk.type != TokenType::TOKEN_RIGHT_CURLY) {
+    res->next = ParseOption();
+  }
+
+  return res;
 }
 
 std::shared_ptr<Speaker> Parser::ParseSpeaker() {
