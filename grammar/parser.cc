@@ -783,6 +783,11 @@ std::shared_ptr<Speaker> Parser::ParseSpeaker() {
     }
 
     res->State = tk;
+
+    tk = m_lex.GetNext();
+    if (tk.type != TokenType::TOKEN_RIGHT_PARENTHESES) {
+      // TODO: throw
+    }
   }
 
   tk = m_lex.GetNext();
