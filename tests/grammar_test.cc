@@ -205,4 +205,14 @@ TEST(Grammar, CommandTest) {
     EXPECT_NE(sound, nullptr);
     EXPECT_EQ(sound->effect->value.value, 0);
   }
+
+  {
+    const char* PROGRAM = R"(dialogue test { animate @alice "thank" })";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto anime = std::dynamic_pointer_cast<Animate>(cmd);
+    EXPECT_NE(anime, nullptr);
+  }
 }

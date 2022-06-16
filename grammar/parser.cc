@@ -433,7 +433,7 @@ std::shared_ptr<Command> Parser::ParseCommand() {
   Token tk = m_lex.LookNext();
 
   switch (tk.type) {
-  case TokenType::TOKEN_ANIME:
+  case TokenType::TOKEN_ANIMATE:
     return ParseAnimate();
     break;
   case TokenType::TOKEN_SOUND:

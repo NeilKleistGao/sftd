@@ -31,7 +31,7 @@
 #include "exceptions/lex_exceptions.h"
 
 TEST(LexTest, KeywordTest) {
-  const char* KEYWORDS_FILE = "when select null and or not sound anime move delay interact trigger auto";
+  const char* KEYWORDS_FILE = "when select null and or not sound animate move delay interact trigger auto";
   ConstantTable::GetInstance()->Clear();
   SymbolTable::GetInstance()->Clear();
   LexParser parser{KEYWORDS_FILE, std::strlen(KEYWORDS_FILE)};

@@ -50,7 +50,7 @@ LexParser::LexParser(const char* p_buffer, unsigned long p_length) : m_line(1) {
   m_keywords.insert(std::make_pair("false", Token{TokenType::TOKEN_BOOL, 0}));
   m_keywords.insert(std::make_pair("sound", Token{TokenType::TOKEN_SOUND}));
   m_keywords.insert(std::make_pair("move", Token{TokenType::TOKEN_MOVE}));
-  m_keywords.insert(std::make_pair("anime", Token{TokenType::TOKEN_ANIME}));
+  m_keywords.insert(std::make_pair("animate", Token{TokenType::TOKEN_ANIMATE}));
   m_keywords.insert(std::make_pair("delay", Token{TokenType::TOKEN_DELAY}));
   m_keywords.insert(std::make_pair("interact", Token{TokenType::TOKEN_INTERACT}));
   m_keywords.insert(std::make_pair("trigger", Token{TokenType::TOKEN_TRIGGER}));
