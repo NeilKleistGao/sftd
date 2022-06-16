@@ -14,11 +14,10 @@
 
 ## Binary Structure
 suffix: `.dialogue` -> `.dd` (Dialogue Data)
-- Magic number: 2 Bytes
-- Default language code: 4 Bytes
-- Symbol table Size: 4Bytes
+- Magic number: 4 Bytes
+- Symbol table Size: 4 Bytes
 - Symbol table
-- The number of strings(not in dialogues): 4Bytes
+- The number of strings: 4 Bytes
 - Strings list
 - The number of auto dialogues: 4 Bytes
 - Auto dialogues start addresses
@@ -59,7 +58,7 @@ OperatorID: 4, 5
 
 Parameters:
 - String's ID
-- Time (for Operator 5)
+- Time in float (for Operator 5)
 
 ### Jump
 Call or jump to another part of dialogues.
@@ -67,7 +66,7 @@ Call or jump to another part of dialogues.
 OperatorID: 6(for call), 7(for jump)
 
 Parameters:
-- Target part's index
+- Target address
 
 ### Options
 Provide options for players.
@@ -84,7 +83,7 @@ Get variables/characters from the game
 OperatorID: 9(variables), 10(characters)
 
 Parameters:
-- Data's name
+- Data's name(ID in symbol table)
 
 ### Set Data From Games
 Get variables/characters from the game
@@ -92,7 +91,8 @@ Get variables/characters from the game
 OperatorID: 11
 
 Parameters:
-- Data's name
+- Data's name(ID in symbol table)
+- Data's type(0 -> in memory, 1 -> string)
 - Data's value
 
 ### Play Animation
@@ -102,6 +102,7 @@ OperatorID: 12
 
 Parameters:
 - Target's name
+- Type(0 -> in memory, 1 -> string)
 - Animation's name
 
 ### Play Sound
@@ -110,6 +111,7 @@ Play sound effect.
 OperatorID: 13
 
 Parameters:
+- Type(0 -> in memory, 1 -> string)
 - Sound's name
 
 ### Calculations
@@ -119,8 +121,12 @@ OperatorID: 14(+), 15(-), 16(*), 17(/), 18(%), 19(=), 20(and), 21(or), 22(not), 
 
 Parameters:
 - Target variable
+- First Expression type(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
+- Second Expression type(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
 - First parameter
+- Second Expression type(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
 - Second parameter(except 19, 22, 23)
+
 
 ### Conditions
 Jump by the given condition.

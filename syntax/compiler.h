@@ -17,53 +17,26 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-*/
+ */
 
-/// @file main.cc
+/// @file compiler.h
 
-#include <cstdio>
+#ifndef SFTD_COMPILER_H
+#define SFTD_COMPILER_H
 
-#include "syntax/compiler.h"
+class Compiler {
+public:
+  Compiler() : m_size(4), m_string_size(4), m_symbol_size(4) {};
 
-extern "C" {
-  /**
-   * Compile dialogue files.
-   * @param p_input: input filename
-   * @param p_output: output filename
-   * @return const char*, a string standing for errors(null if no error)
-   */
-  const char* Compile(const char* p_input, const char* p_output) {
-    FILE* fp = fopen(p_input, "r");
-    if (fp == nullptr) {
-      return "File doesn't exist.";
-    }
+  const char* Compile(char* p_content, long p_length);
+  void Write(char* p_buffer, long p_length);
 
-    fseek(fp, 0, SEEK_END);
-    long size = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
-    char* buffer = new char[size];
-    fread(buffer, sizeof(char), size, fp);
-    fclose(fp);
-
-    Compiler compiler{};
-    const char* res = compiler.Compile(buffer, size);
-    delete[] buffer; buffer = nullptr;
-    if (res != nullptr) {
-      return res;
-    }
-
-    size = compiler.GetSize();
-    buffer = new char[size];
-    compiler.Write(buffer, size);
-    fp = fopen(p_input, "wb");
-    if (fp == nullptr) {
-      return "Can't write the file.";
-    }
-
-    fwrite(buffer, sizeof(char), size, fp);
-    fclose(fp);
-    delete[] buffer; buffer = nullptr;
-
-    return nullptr;
+  inline long GetSize() const {
+    return m_size;
   }
-}
+private:
+  long m_size;
+  long m_symbol_size, m_string_size;
+};
+
+#endif // SFTD_COMPILER_H

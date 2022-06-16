@@ -17,53 +17,52 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-*/
+ */
 
-/// @file main.cc
+/// @file command.h
 
-#include <cstdio>
+#ifndef SFTD_COMMAND_H
+#define SFTD_COMMAND_H
 
-#include "syntax/compiler.h"
+#include <vector>
 
-extern "C" {
-  /**
-   * Compile dialogue files.
-   * @param p_input: input filename
-   * @param p_output: output filename
-   * @return const char*, a string standing for errors(null if no error)
-   */
-  const char* Compile(const char* p_input, const char* p_output) {
-    FILE* fp = fopen(p_input, "r");
-    if (fp == nullptr) {
-      return "File doesn't exist.";
-    }
+enum class CommandType {
+  EMPTY = 0,
+  START_DIALOGUE = 1,
+  SET_SPEAKER,
+  SET_SPEAKER_WITH_STATE,
+  TALK,
+  TALK_IN_TIME,
+  CALL,
+  JUMP,
+  OPTION,
+  GET_DATA,
+  SET_DATA,
+  PLAY_ANIMATION,
+  PLAY_SOUND,
+  ADD,
+  SUB,
+  MUL,
+  DIV,
+  MOD,
+  EQUAL,
+  AND,
+  OR,
+  NOT,
+  NEG,
+  CONDITIONAL_JUMP,
+  MOVE,
+  DELAY,
+  PUBLISH,
+  END_DIALOGUE
+};
 
-    fseek(fp, 0, SEEK_END);
-    long size = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
-    char* buffer = new char[size];
-    fread(buffer, sizeof(char), size, fp);
-    fclose(fp);
+struct ILCommand {
+  CommandType type{};
+  std::vector<int> parameters;
 
-    Compiler compiler{};
-    const char* res = compiler.Compile(buffer, size);
-    delete[] buffer; buffer = nullptr;
-    if (res != nullptr) {
-      return res;
-    }
+  ILCommand() = default;
+  explicit ILCommand(CommandType p_type) : type(p_type) {}
+};
 
-    size = compiler.GetSize();
-    buffer = new char[size];
-    compiler.Write(buffer, size);
-    fp = fopen(p_input, "wb");
-    if (fp == nullptr) {
-      return "Can't write the file.";
-    }
-
-    fwrite(buffer, sizeof(char), size, fp);
-    fclose(fp);
-    delete[] buffer; buffer = nullptr;
-
-    return nullptr;
-  }
-}
+#endif // SFTD_COMMAND_H

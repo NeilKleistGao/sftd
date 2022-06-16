@@ -17,53 +17,31 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-*/
+ */
 
-/// @file main.cc
+/// @file translator.h
 
-#include <cstdio>
+#ifndef SFTD_TRANSLATOR_H
+#define SFTD_TRANSLATOR_H
 
-#include "syntax/compiler.h"
+#include <memory>
+#include <unordered_set>
 
-extern "C" {
-  /**
-   * Compile dialogue files.
-   * @param p_input: input filename
-   * @param p_output: output filename
-   * @return const char*, a string standing for errors(null if no error)
-   */
-  const char* Compile(const char* p_input, const char* p_output) {
-    FILE* fp = fopen(p_input, "r");
-    if (fp == nullptr) {
-      return "File doesn't exist.";
-    }
+#include "grammar/ast.h"
+#include "command.h"
 
-    fseek(fp, 0, SEEK_END);
-    long size = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
-    char* buffer = new char[size];
-    fread(buffer, sizeof(char), size, fp);
-    fclose(fp);
+class Translator {
+public:
+  explicit Translator() = default;
+  ~Translator() = default;
+  Translator(const Translator&) = delete;
+  Translator& operator=(const Translator&) = delete;
+  Translator(Translator&&) = delete;
+  Translator& operator=(Translator&&) = delete;
 
-    Compiler compiler{};
-    const char* res = compiler.Compile(buffer, size);
-    delete[] buffer; buffer = nullptr;
-    if (res != nullptr) {
-      return res;
-    }
+  std::vector<ILCommand>& TranslateDialogue(const std::shared_ptr<Dialogue>& p_dialogue);
+private:
+  std::vector<ILCommand> m_pool;
+};
 
-    size = compiler.GetSize();
-    buffer = new char[size];
-    compiler.Write(buffer, size);
-    fp = fopen(p_input, "wb");
-    if (fp == nullptr) {
-      return "Can't write the file.";
-    }
-
-    fwrite(buffer, sizeof(char), size, fp);
-    fclose(fp);
-    delete[] buffer; buffer = nullptr;
-
-    return nullptr;
-  }
-}
+#endif // SFTD_TRANSLATOR_H
