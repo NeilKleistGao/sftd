@@ -231,4 +231,14 @@ TEST(Grammar, CommandTest) {
     EXPECT_EQ(move->x->value.value, 2);
     EXPECT_EQ(move->y->value.value, 0);
   }
+
+  {
+    const char* PROGRAM = R"(dialogue test { (NewItem, "cake") })";
+    Parser parser{PROGRAM, std::strlen(PROGRAM)};
+    auto ast = parser.GenerateAST();
+
+    auto cmd = ast->dialogues->dialogue->content->command;
+    auto publish = std::dynamic_pointer_cast<Publish>(cmd);
+    EXPECT_NE(publish, nullptr);
+  }
 }

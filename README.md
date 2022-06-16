@@ -19,7 +19,7 @@ dialogue GetCookie {
         "I'm not hungry now."
     }
     
-    <NewItem, "cookie">
+    (NewItem, "cookie")
 }
 
 dialogue GetCake {
@@ -28,7 +28,7 @@ dialogue GetCake {
         "It looks great." in 2
     }
     
-    <NewItem, "cake">
+    (NewItem, "cake")
 }
 
 interact dialogue Talk1 {

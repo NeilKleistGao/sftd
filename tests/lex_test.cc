@@ -66,7 +66,7 @@ TEST(LexTest, KeywordTest) {
 
   EXPECT_EQ(parser.HasNext(), true);
   token = parser.GetNext();
-  EXPECT_EQ(token.type, TokenType::TOKEN_ANIME);
+  EXPECT_EQ(token.type, TokenType::TOKEN_ANIMATE);
 
   EXPECT_EQ(parser.HasNext(), true);
   token = parser.GetNext();

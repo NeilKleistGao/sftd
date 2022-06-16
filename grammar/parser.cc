@@ -466,7 +466,7 @@ std::shared_ptr<Command> Parser::ParseCommand() {
   case TokenType::TOKEN_DOLLAR:
     return ParseAssign();
     break;
-  case TokenType::TOKEN_LESS:
+  case TokenType::TOKEN_LEFT_PARENTHESES:
     return ParsePublish();
   default:
     // TODO: throw
@@ -722,7 +722,7 @@ std::shared_ptr<Publish> Parser::ParsePublish() {
   }
 
   tk = m_lex.GetNext();
-  if (tk.type != TokenType::TOKEN_GREATER) {
+  if (tk.type != TokenType::TOKEN_RIGHT_PARENTHESES) {
     // TODO: throw
   }
 
