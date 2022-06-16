@@ -671,7 +671,12 @@ std::shared_ptr<Speak> Parser::ParseSpeak() {
   auto res = std::make_shared<Speak>();
   res->speaker = ParseSpeaker();
 
-  Token tk = m_lex.LookNext();
+  Token tk = m_lex.GetNext();
+  if (tk.type != TokenType::TOKEN_COLON) {
+    // TODO: throw
+  }
+
+  tk = m_lex.LookNext();
   if (tk.type == TokenType::TOKEN_LEFT_CURLY) {
     m_lex.GetNext();
     res->content = ParseContent();
