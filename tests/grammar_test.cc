@@ -379,13 +379,14 @@ TEST(Grammar, TextTest) {
   }
 
   {
-    const char* PROGRAM = R"(dialogue test { [Alice]: "Hello!" in 12 })";
+    const char* PROGRAM = R"(dialogue test { [Alice]: {"Hello!"} })";
     Parser parser{PROGRAM, std::strlen(PROGRAM)};
     auto ast = parser.GenerateAST();
 
     auto cmd = ast->dialogues->dialogue->content->command;
     auto spk = std::dynamic_pointer_cast<Speak>(cmd);
     EXPECT_NE(spk, nullptr);
-    EXPECT_EQ(spk->message->time->value.value, 12);
+    auto msg = std::dynamic_pointer_cast<Message>(spk->content->command);
+    EXPECT_NE(msg, nullptr);
   }
 }
