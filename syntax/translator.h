@@ -32,7 +32,7 @@
 
 class Translator {
 public:
-  Translator() : m_temp_variable_count(0) { };
+  Translator() : m_temp_variable_count(0), m_size(0), m_id(0) { };
   ~Translator() = default;
 
   void TranslateDialogue(const std::shared_ptr<Dialogue>& p_dialogue);
@@ -74,7 +74,7 @@ private:
   static int GetVariableType(TokenType p_type);
 
   inline void Push(ILCommand&& p_cmd) {
-    m_size += 4 * static_cast<int>(p_cmd.parameters.size());
+    m_size += 4 * static_cast<int>(p_cmd.parameters.size() + 1);
     m_pool.push_back(p_cmd);
   }
 };

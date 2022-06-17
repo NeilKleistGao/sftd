@@ -167,3 +167,16 @@ TEST(CompileTest, StringTableTest) {
     EXPECT_EQ(buffer[35], 't');
   }
 }
+
+TEST(CompileTest, ILTest) {
+  {
+    const char* PROGRAM = R"(dialogue test1{} auto dialogue test2{} interact dialogue test3{} trigger dialogue test4{})";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+    EXPECT_EQ(size, 144);
+  }
+}

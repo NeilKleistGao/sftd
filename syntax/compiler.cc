@@ -42,12 +42,13 @@ const char* Compiler::Compile(char* p_content, unsigned long p_length, const cha
     GenerateI18NFiles(program, p_i18n_prefix);
     GenerateHeader();
 
+    m_size += 16;
     auto cur = program->dialogues;
     while (cur != nullptr) {
       auto d = cur->dialogue;
       auto translator = Translator{};
       translator.TranslateDialogue(d);
-      m_size += translator.GetSize();
+      m_size += translator.GetSize() + 4;
 
       switch (d->type.type) {
       case TokenType::TOKEN_EMPTY:
