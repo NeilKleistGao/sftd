@@ -21,6 +21,12 @@
 
 /// @file main.cc
 
+#ifdef WIN32
+#define DLL_PREFIX __declspec(dllexport)
+#else
+#define DLL_PREFIX
+#endif
+
 #include <cstdio>
 
 #include "syntax/compiler.h"
@@ -33,7 +39,7 @@ extern "C" {
    * @param p_i18n_prefix: translation files' prefix
    * @return const char*, a string standing for errors(null if no error)
    */
-  const char* Compile(const char* p_input, const char* p_output, const char* p_i18n_prefix) {
+  DLL_PREFIX const char* Compile(const char* p_input, const char* p_output, const char* p_i18n_prefix) {
     FILE* fp = fopen(p_input, "r");
     if (fp == nullptr) {
       return "File doesn't exist.";
