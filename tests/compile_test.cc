@@ -481,7 +481,7 @@ TEST(CompileTest, ILTest) {
     EXPECT_EQ(buffer[size - 12], static_cast<char>(0));
     EXPECT_EQ(buffer[size - 11], static_cast<char>(0));
     EXPECT_EQ(buffer[size - 10], static_cast<char>(0));
-    EXPECT_EQ(buffer[size - 9], static_cast<char>(size - 71));
+    EXPECT_EQ(buffer[size - 9], static_cast<char>(size - 74));
 
     EXPECT_EQ(buffer[size - 16], static_cast<char>(0xFF));
     EXPECT_EQ(buffer[size - 15], static_cast<char>(0xFF));

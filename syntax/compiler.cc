@@ -182,6 +182,12 @@ void Compiler::GenerateHeader() {
   }
 
   m_size += m_header.size();
+  int padding = m_size % 4;
+  for (int i = 0; i < padding; ++i) {
+    m_header.push_back(0);
+  }
+
+  m_size += padding;
 }
 
 void Compiler::PushStringInHead(const std::string& p_str) {
