@@ -33,8 +33,8 @@ enum class CommandType {
   SET_SPEAKER_WITH_STATE,
   TALK,
   TALK_IN_TIME,
-  GOTO,
   USE,
+  GOTO,
   OPTION,
   PLAY_ANIMATION,
   PLAY_SOUND,
@@ -57,7 +57,7 @@ enum class CommandType {
   DELAY,
   PUBLISH,
   SET_DATA,
-  END_DIALOGUE
+  END_DIALOGUE = 255
 };
 
 struct ILCommand {

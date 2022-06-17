@@ -178,5 +178,154 @@ TEST(CompileTest, ILTest) {
     compiler.Write(buffer);
 
     EXPECT_EQ(size, 144);
+    EXPECT_EQ(buffer[64], 0);
+    EXPECT_EQ(buffer[65], 0);
+    EXPECT_EQ(buffer[66], 0);
+    EXPECT_EQ(buffer[67], 1);
+
+    EXPECT_EQ(buffer[84], 0);
+    EXPECT_EQ(buffer[85], 0);
+    EXPECT_EQ(buffer[86], 0);
+    EXPECT_EQ(buffer[87], 1);
+
+    EXPECT_EQ(buffer[104], 0);
+    EXPECT_EQ(buffer[105], 0);
+    EXPECT_EQ(buffer[106], 0);
+    EXPECT_EQ(buffer[107], 1);
+
+    EXPECT_EQ(buffer[124], 0);
+    EXPECT_EQ(buffer[125], 0);
+    EXPECT_EQ(buffer[126], 0);
+    EXPECT_EQ(buffer[127], 1);
+  }
+
+  {
+    const char* PROGRAM = R"(dialogue test{"hi!"})";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+    EXPECT_EQ(buffer[size - 4], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 3], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 2], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 1], static_cast<char>(255));
+
+    EXPECT_EQ(buffer[size - 8], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 7], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 6], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 5], static_cast<char>(0));
+
+    EXPECT_EQ(buffer[size - 12], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 11], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 10], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 9], static_cast<char>(4));
+
+    EXPECT_EQ(buffer[size - 16], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 15], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 14], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 13], static_cast<char>(1));
+
+    EXPECT_EQ(buffer[size - 20], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 19], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 18], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 17], static_cast<char>(0));
+
+    EXPECT_EQ(buffer[size - 24], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 23], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 22], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 21], static_cast<char>(4));
+  }
+
+  {
+    const char* PROGRAM = R"(dialogue test{"hi!" in 1})";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+    EXPECT_EQ(buffer[size - 8], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 7], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 6], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 5], static_cast<char>(1));
+
+    EXPECT_EQ(buffer[size - 12], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 11], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 10], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 9], static_cast<char>(2));
+
+    EXPECT_EQ(buffer[size - 16], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 15], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 14], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 13], static_cast<char>(0));
+
+    EXPECT_EQ(buffer[size - 20], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 19], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 18], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 17], static_cast<char>(5));
+  }
+
+  {
+    const char* PROGRAM = R"(dialogue test{[Alice]: "hi!"})";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+    EXPECT_EQ(buffer[size - 16], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 15], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 14], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 13], static_cast<char>(1));
+
+    EXPECT_EQ(buffer[size - 20], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 19], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 18], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 17], static_cast<char>(2));
+  }
+
+  {
+    const char* PROGRAM = R"(dialogue test{[Alice(happy)]: "hi!"})";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+    EXPECT_EQ(buffer[size - 16], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 15], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 14], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 13], static_cast<char>(2));
+
+    EXPECT_EQ(buffer[size - 20], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 19], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 18], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 17], static_cast<char>(1));
+
+    EXPECT_EQ(buffer[size - 24], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 23], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 22], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 21], static_cast<char>(3));
+  }
+
+  {
+    const char* PROGRAM = R"(dialogue test1{} dialogue test2{ use test1 })";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+//    EXPECT_EQ(buffer[size - 8], static_cast<char>(0));
+//    EXPECT_EQ(buffer[size - 7], static_cast<char>(0));
+//    EXPECT_EQ(buffer[size - 6], static_cast<char>(0));
+//    EXPECT_EQ(buffer[size - 5], static_cast<char>(1));
+
+    EXPECT_EQ(buffer[size - 12], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 11], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 10], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 9], static_cast<char>(6));
   }
 }
