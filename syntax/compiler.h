@@ -26,6 +26,7 @@
 
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 #include "command.h"
 #include "grammar/ast.h"
@@ -46,6 +47,7 @@ private:
   std::vector<char> m_header;
 
   std::vector<Translator> m_auto, m_trigger, m_interact, m_other;
+  std::unordered_map<int, int> m_address;
 
   bool m_i18n;
 
@@ -59,7 +61,17 @@ private:
     m_header.push_back(static_cast<char>(p_i & 0xFF));
   }
 
+  static inline void WriteInt(int p_i, char** p_buffer) {
+    **p_buffer = static_cast<char>((p_i >> 24) & 0xFF); ++(*p_buffer);
+    **p_buffer = static_cast<char>((p_i >> 16) & 0xFF); ++(*p_buffer);
+    **p_buffer = static_cast<char>((p_i >> 8) & 0xFF); ++(*p_buffer);
+    **p_buffer = static_cast<char>(p_i & 0xFF); ++(*p_buffer);
+  }
+
+  void WriteTranslators(std::vector<Translator>& p_list, char** p_buffer);
+
   void PushStringInHead(const std::string& p_str);
+  void RecordGlobalAddress();
 };
 
 #endif // SFTD_COMPILER_H

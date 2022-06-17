@@ -47,6 +47,7 @@ const char* Compiler::Compile(char* p_content, unsigned long p_length, const cha
       auto d = cur->dialogue;
       auto translator = Translator{};
       translator.TranslateDialogue(d);
+      m_size += translator.GetSize();
 
       switch (d->type.type) {
       case TokenType::TOKEN_EMPTY:
@@ -62,12 +63,14 @@ const char* Compiler::Compile(char* p_content, unsigned long p_length, const cha
         m_auto.push_back(translator);
         break;
       default:
-        // TODO:
+        // TODO: throw
         break;
       }
 
       cur = cur->next;
     }
+
+    RecordGlobalAddress();
   }
   catch (...) {
     // TODO: throw
@@ -80,7 +83,10 @@ void Compiler::Write(char* p_buffer) {
     ++p_buffer;
   }
 
-  // TODO:
+  WriteTranslators(m_auto, &p_buffer);
+  WriteTranslators(m_trigger, &p_buffer);
+  WriteTranslators(m_interact, &p_buffer);
+  WriteTranslators(m_other, &p_buffer);
 }
 
 void Compiler::GenerateI18NFiles(const std::shared_ptr<Program>& p_program, const std::string& p_prefix) {
@@ -182,5 +188,50 @@ void Compiler::PushStringInHead(const std::string& p_str) {
 
   for (char c : p_str) {
     m_header.push_back(c);
+  }
+}
+
+void Compiler::RecordGlobalAddress() {
+  int now = m_header.size();
+  for (const auto& t : m_auto) {
+    int id = t.GetID();
+    m_address[id] = now;
+    now += t.GetSize();
+  }
+
+  for (const auto& t : m_trigger) {
+    int id = t.GetID();
+    m_address[id] = now;
+    now += t.GetSize();
+  }
+
+  for (const auto& t : m_interact) {
+    int id = t.GetID();
+    m_address[id] = now;
+    now += t.GetSize();
+  }
+
+  for (const auto& t : m_other) {
+    int id = t.GetID();
+    m_address[id] = now;
+    now += t.GetSize();
+  }
+}
+
+void Compiler::WriteTranslators(std::vector<Translator>& p_list, char** p_buffer) {
+  WriteInt(p_list.size(), p_buffer);
+
+  for (auto& trans : p_list) {
+    auto cmd_list = trans.Access();
+    for (auto& cmd : cmd_list) {
+      WriteInt(static_cast<int>(cmd.type), p_buffer);
+      if (cmd.type == CommandType::USE || cmd.type == CommandType::GOTO) {
+        cmd.parameters.front() = m_address[cmd.parameters.front()];
+      }
+
+      for (int p : cmd.parameters) {
+        WriteInt(p, p_buffer);
+      }
+    }
   }
 }

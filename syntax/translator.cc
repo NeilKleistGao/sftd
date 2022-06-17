@@ -26,6 +26,8 @@
 #include "sugars/matcher.hpp"
 
 void Translator::TranslateDialogue(const std::shared_ptr<Dialogue>& p_dialogue) {
+  m_id = p_dialogue->name.value;
+
   if (p_dialogue->condition != nullptr) {
     auto res = TranslateExpress(p_dialogue->condition);
     auto when = ILCommand{CommandType::CONDITIONAL_JUMP};

@@ -45,10 +45,15 @@ public:
     return m_size;
   }
 
+  inline int GetID() const {
+    return m_id;
+  }
+
 private:
   std::vector<ILCommand> m_pool;
   int m_temp_variable_count;
   int m_size;
+  int m_id;
 
   Token TranslateExpress(const std::shared_ptr<Expression>& p_exp);
   void TranslateContent(const std::shared_ptr<Content>& p_content);
