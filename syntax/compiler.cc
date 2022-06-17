@@ -223,6 +223,7 @@ void Compiler::WriteTranslators(std::vector<Translator>& p_list, char** p_buffer
 
   for (auto& trans : p_list) {
     auto cmd_list = trans.Access();
+    WriteInt(cmd_list.size(), p_buffer);
     for (auto& cmd : cmd_list) {
       WriteInt(static_cast<int>(cmd.type), p_buffer);
       if (cmd.type == CommandType::USE || cmd.type == CommandType::GOTO) {
