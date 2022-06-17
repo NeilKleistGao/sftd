@@ -40,13 +40,13 @@ void Translator::TranslateDialogue(const std::shared_ptr<Dialogue>& p_dialogue) 
     Push(ILCommand{CommandType::EMPTY});
   }
 
-  auto& when = m_pool.back();
+  int index = m_pool.size() - 1;
 
   Push(ILCommand{CommandType::START_DIALOGUE});
   TranslateContent(p_dialogue->content);
 
   if (p_dialogue->condition != nullptr) {
-    when.parameters.back() = m_size;
+    m_pool[index].parameters.back() = m_size + 4;
   }
 
   Push(ILCommand{CommandType::END_DIALOGUE});

@@ -99,7 +99,7 @@ Parameters:
 ### Move
 Move a character to another place.
 
-OperatorID: 11, 12
+OperatorID: 11
 
 Parameters:
 - Character ID
@@ -110,7 +110,7 @@ Parameters:
 ### Conditions
 Jump by the given condition.
 
-OperatorID: 13
+OperatorID: 12
 
 Parameters:
 - Condition value type
@@ -120,7 +120,7 @@ Parameters:
 ### Calculations
 Calculate.
 
-OperatorID: 14(+), 15(-), 16(*), 17(/), 18(%), 19(=), 20(and), 21(or), 22(not), 23(-neg), 24(<), 25(>), 26(<=), 27(>=)
+OperatorID: 13(+), 14(-), 15(*), 16(/), 17(%), 18(=), 29(and), 20(or), 21(not), 22(-neg), 23(<), 24(>), 25(<=), 26(>=)
 
 Parameters:
 - Target variable
@@ -132,7 +132,7 @@ Parameters:
 ### Delay
 Wait for seconds.
 
-OperatorID: 28
+OperatorID: 27
 
 Parameters:
 - Time(in seconds)
@@ -141,7 +141,7 @@ Parameters:
 ### Publish
 Publish an event.
 
-OperatorID: 29
+OperatorID: 28
 
 Parameters:
 - Event name
@@ -152,7 +152,7 @@ Parameters:
 ### Set data
 Set variable in memory
 
-OperatorID: 30
+OperatorID: 29
 
 Parameters:
 - Target Address
