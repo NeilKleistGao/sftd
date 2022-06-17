@@ -31,6 +31,7 @@
 #include "command.h"
 #include "grammar/ast.h"
 #include "translator.h"
+#include "exceptions/basic_exception.h"
 
 class Compiler {
 public:
@@ -72,6 +73,8 @@ private:
 
   void PushStringInHead(const std::string& p_str);
   void RecordGlobalAddress();
+
+  char* ExportError(BasicException* p_e);
 };
 
 #endif // SFTD_COMPILER_H

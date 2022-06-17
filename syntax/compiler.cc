@@ -24,8 +24,8 @@
 #include "compiler.h"
 
 #include <algorithm>
-#include <unordered_map>
 #include <cstdio>
+#include <cstring>
 
 #include "grammar/parser.h"
 #include "tables/symbol_table.h"
@@ -33,6 +33,7 @@
 #include "tables/i18n_table.h"
 #include "exceptions/lex_exceptions.h"
 #include "exceptions/grammar_exceptions.h"
+#include "exceptions/syntax_exceptions.h"
 
 const char* Compiler::Compile(char* p_content, unsigned long p_length, const char* p_i18n_prefix) {
   try {
@@ -64,8 +65,7 @@ const char* Compiler::Compile(char* p_content, unsigned long p_length, const cha
         m_auto.push_back(translator);
         break;
       default:
-        // TODO: throw
-        break;
+        throw UnknownType{d->type.line, "dialogue"};
       }
 
       cur = cur->next;
@@ -73,8 +73,23 @@ const char* Compiler::Compile(char* p_content, unsigned long p_length, const cha
 
     RecordGlobalAddress();
   }
-  catch (...) {
-    // TODO: throw
+  catch (UnexpectedEndOfString& e) {
+    return ExportError(&e);
+  }
+  catch (WrongNumber& e) {
+    return ExportError(&e);
+  }
+  catch (UnknownNotion& e) {
+    return ExportError(&e);
+  }
+  catch (GrammarMissing& e) {
+    return ExportError(&e);
+  }
+  catch (UnknownToken& e) {
+    return ExportError(&e);
+  }
+  catch (UnknownType& e) {
+    return ExportError(&e);
   }
 }
 
@@ -245,4 +260,12 @@ void Compiler::WriteTranslators(std::vector<Translator>& p_list, char** p_buffer
       }
     }
   }
+}
+
+char* Compiler::ExportError(BasicException* p_e) {
+  const char* what = p_e->what();
+  int size = std::strlen(what);
+  char* error = new char[size];
+  std::strcpy(error, what);
+  return error;
 }

@@ -24,6 +24,7 @@
 #include "translator.h"
 
 #include "sugars/matcher.hpp"
+#include "exceptions/syntax_exceptions.h"
 
 void Translator::TranslateDialogue(const std::shared_ptr<Dialogue>& p_dialogue) {
   m_id = p_dialogue->name.value;
@@ -150,7 +151,7 @@ void Translator::TranslateCommand(const std::shared_ptr<Command>& p_cmd) {
       ->Case<Message>()([this](const std::shared_ptr<Message>& p_p) { TranslateMessage(p_p); })
       ->Case<Publish>()([this](const std::shared_ptr<Publish>& p_p) { TranslatePublish(p_p); })
       ->Case<Speak>()([this](const std::shared_ptr<Speak>& p_p) { TranslateSpeak(p_p); })
-      ->CaseDefault()([](const std::shared_ptr<Command>& p_cmd){ /*TODO: throw*/ });
+      ->CaseDefault()([](const std::shared_ptr<Command>& p_cmd){ throw UnknownType{-1, "command"}; });
 }
 
 void Translator::TranslateAnimate(const std::shared_ptr<Animate>& p_cmd) {
@@ -336,8 +337,7 @@ int Translator::GetVariableType(TokenType p_type) {
     res = 4;
     break;
   default:
-    // TODO: throw
-    break;
+    throw UnknownType{-1, "variable"};
   }
 
   return res;
