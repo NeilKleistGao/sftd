@@ -227,7 +227,7 @@ void Translator::TranslateSelect(const std::shared_ptr<Option>& p_cmd) {
       TranslateContent(p_cmd->res);
     }
 
-    op.parameters.back() = m_size;
+    op.parameters.back() = m_size + 4;
     TranslateSelect(p_cmd->next);
   }
 }
