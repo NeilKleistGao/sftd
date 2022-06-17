@@ -259,6 +259,7 @@ void Translator::TranslateAssign(const std::shared_ptr<Assign>& p_cmd) {
   }
   else {
     auto res = ILCommand{CommandType::SET_DATA};
+    res.parameters.push_back(p_cmd->target.value);
     res.parameters.push_back(GetVariableType(exp.type));
     res.parameters.push_back(exp.value);
     Push(std::move(res));
