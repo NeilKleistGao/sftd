@@ -143,10 +143,11 @@ void Translator::TranslateCommand(const std::shared_ptr<Command>& p_cmd) {
       ->Case<Goto>()([this](const std::shared_ptr<Goto>& p_p) { TranslateGoto(p_p); })
       ->Case<Use>()([this](const std::shared_ptr<Use>& p_p) { TranslateUse(p_p); })
       ->Case<If>()([this](const std::shared_ptr<If>& p_p) { TranslateIf(p_p); })
-      ->Case<Select>()([this](const std::shared_ptr<Select>& p_p) { TranslateSelect(p_p); })
+      ->Case<Select>()([this](const std::shared_ptr<Select>& p_p) { TranslateSelect(p_p->option); })
       ->Case<Assign>()([this](const std::shared_ptr<Assign>& p_p) { TranslateAssign(p_p); })
       ->Case<Message>()([this](const std::shared_ptr<Message>& p_p) { TranslateMessage(p_p); })
       ->Case<Publish>()([this](const std::shared_ptr<Publish>& p_p) { TranslatePublish(p_p); })
+      ->Case<Speak>()([this](const std::shared_ptr<Speak>& p_p) { TranslateSpeak(p_p); })
       ->CaseDefault()([](const std::shared_ptr<Command>& p_cmd){ /*TODO: throw*/ });
 }
 
@@ -155,72 +156,158 @@ void Translator::TranslateAnimate(const std::shared_ptr<Animate>& p_cmd) {
   res.parameters.push_back(p_cmd->name.value);
 
   auto exp = TranslateExpress(p_cmd->anim);
-  if (exp.type == TokenType::TOKEN_STRING) {
-    res.parameters.push_back(1);
-  }
-  else {
-    res.parameters.push_back(0);
-  }
-
+  res.parameters.push_back(GetVariableType(exp.type));
   res.parameters.push_back(exp.value);
   Push(std::move(res));
 }
 
 void Translator::TranslateSound(const std::shared_ptr<Sound>& p_cmd) {
-  auto res = ILCommand{CommandType::PLAY_ANIMATION};
+  auto res = ILCommand{CommandType::PLAY_SOUND};
 
   auto exp = TranslateExpress(p_cmd->effect);
-  if (exp.type == TokenType::TOKEN_STRING) {
-    res.parameters.push_back(1);
-  }
-  else {
-    res.parameters.push_back(0);
-  }
-
+  res.parameters.push_back(GetVariableType(exp.type));
   res.parameters.push_back(exp.value);
   Push(std::move(res));
 }
 
 void Translator::TranslateDelay(const std::shared_ptr<Delay>& p_cmd) {
+  auto res = ILCommand{CommandType::DELAY};
 
+  auto exp = TranslateExpress(p_cmd->time);
+  res.parameters.push_back(GetVariableType(exp.type));
+  res.parameters.push_back(exp.value);
+  Push(std::move(res));
 }
 
 void Translator::TranslateMove(const std::shared_ptr<Move>& p_cmd) {
+  auto res = ILCommand{CommandType::MOVE};
+  res.parameters.push_back(p_cmd->name.value);
 
+  auto exp = TranslateExpress(p_cmd->x);
+  res.parameters.push_back(GetVariableType(exp.type));
+  res.parameters.push_back(exp.value);
+
+  exp = TranslateExpress(p_cmd->y);
+  res.parameters.push_back(GetVariableType(exp.type));
+  res.parameters.push_back(exp.value);
+
+  exp = TranslateExpress(p_cmd->time);
+  res.parameters.push_back(GetVariableType(exp.type));
+  res.parameters.push_back(exp.value);
+
+  Push(std::move(res));
 }
 
 void Translator::TranslateGoto(const std::shared_ptr<Goto>& p_cmd) {
-
+  auto res = ILCommand{CommandType::GOTO};
+  res.parameters.push_back(p_cmd->name.value);
+  Push(std::move(res));
 }
 
 void Translator::TranslateUse(const std::shared_ptr<Use>& p_cmd) {
-
+  auto res = ILCommand{CommandType::USE};
+  res.parameters.push_back(p_cmd->name.value);
+  Push(std::move(res));
 }
 
-void Translator::TranslateSelect(const std::shared_ptr<Select>& p_cmd) {
+void Translator::TranslateSelect(const std::shared_ptr<Option>& p_cmd) {
+  if (p_cmd != nullptr) {
+    auto res = ILCommand{CommandType::OPTION};
+    res.parameters.push_back(p_cmd->hint.value);
+    res.parameters.push_back(0); // placeholder
+    Push(std::move(res));
 
+    auto& op = m_pool.back();
+    if (p_cmd->command != nullptr) {
+      TranslateCommand(p_cmd->command);
+    }
+    else {
+      TranslateContent(p_cmd->res);
+    }
+
+    op.parameters.back() = m_size;
+    TranslateSelect(p_cmd->next);
+  }
 }
 
 void Translator::TranslateIf(const std::shared_ptr<If>& p_cmd) {
+  auto res = ILCommand{CommandType::CONDITIONAL_JUMP};
+  auto exp = TranslateExpress(p_cmd->condition);
+  res.parameters.push_back(GetVariableType(exp.type));
+  res.parameters.push_back(exp.value);
+  res.parameters.push_back(0); // placeholder
+  Push(std::move(res));
 
+  auto& address = m_pool.back();
+  TranslateContent(p_cmd->true_block);
+  address.parameters.back() = m_size;
+  TranslateContent(p_cmd->false_block);
 }
 
 void Translator::TranslateAssign(const std::shared_ptr<Assign>& p_cmd) {
-
+  auto exp = TranslateExpress(p_cmd->expression);
+  if (exp.type == TokenType::TOKEN_VARIABLE && exp.value < 0) {
+    --m_temp_variable_count;
+    m_pool.back().parameters.front() = p_cmd->target.value;
+  }
+  else {
+    auto res = ILCommand{CommandType::SET_DATA};
+    res.parameters.push_back(GetVariableType(exp.type));
+    res.parameters.push_back(exp.value);
+    Push(std::move(res));
+  }
 }
 
 void Translator::TranslateMessage(const std::shared_ptr<Message>& p_cmd) {
-
+  if (p_cmd->time == nullptr) {
+    auto res = ILCommand{CommandType::TALK};
+    res.parameters.push_back(p_cmd->str.value);
+    Push(std::move(res));
+  }
+  else {
+    auto res = ILCommand{CommandType::TALK_IN_TIME};
+    res.parameters.push_back(p_cmd->str.value);
+    auto exp = TranslateExpress(p_cmd->time);
+    res.parameters.push_back(GetVariableType(exp.type));
+    res.parameters.push_back(exp.value);
+    Push(std::move(res));
+  }
 }
 
 void Translator::TranslateSpeak(const std::shared_ptr<Speak>& p_cmd) {
+  auto speaker = p_cmd->speaker;
+  if (speaker->State.type == TokenType::TOKEN_EMPTY) {
+    auto res = ILCommand{CommandType::SET_SPEAKER};
+    res.parameters.push_back(speaker->name.value);
+    Push(std::move(res));
+  }
+  else {
+    auto res = ILCommand{CommandType::SET_SPEAKER_WITH_STATE};
+    res.parameters.push_back(speaker->name.value);
+    res.parameters.push_back(speaker->State.value);
+    Push(std::move(res));
+  }
 
+  if (p_cmd->message != nullptr) {
+    TranslateMessage(p_cmd->message);
+  }
+  else {
+    TranslateContent(p_cmd->content);
+  }
 }
 
 void Translator::TranslatePublish(const std::shared_ptr<Publish>& p_cmd) {
+  auto res = ILCommand{CommandType::PUBLISH};
+  res.parameters.push_back(p_cmd->name.value);
+  res.parameters.push_back(p_cmd->params.size());
+  for (const auto& p : p_cmd->params) {
+    auto exp = TranslateExpress(p);
+    res.parameters.push_back(GetVariableType(exp.type));
+    res.parameters.push_back(exp.value);
+  }
 
+  Push(std::move(res));
 }
-
 
 int Translator::GetVariableType(TokenType p_type) {
   int res;

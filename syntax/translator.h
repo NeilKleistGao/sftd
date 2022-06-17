@@ -59,7 +59,7 @@ private:
   void TranslateMove(const std::shared_ptr<Move>& p_cmd);
   void TranslateGoto(const std::shared_ptr<Goto>& p_cmd);
   void TranslateUse(const std::shared_ptr<Use>& p_cmd);
-  void TranslateSelect(const std::shared_ptr<Select>& p_cmd);
+  void TranslateSelect(const std::shared_ptr<Option>& p_cmd);
   void TranslateIf(const std::shared_ptr<If>& p_cmd);
   void TranslateAssign(const std::shared_ptr<Assign>& p_cmd);
   void TranslateMessage(const std::shared_ptr<Message>& p_cmd);

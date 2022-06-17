@@ -149,6 +149,16 @@ Parameters:
 - parameter types(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
 - parameters
 
+### Set data
+Set variable in memory
+
+OperatorID: 30
+
+Parameters:
+- Target Address
+- Type
+- Value
+
 ### End
 End a dialogue.
 
