@@ -498,4 +498,33 @@ TEST(CompileTest, ILTest) {
     EXPECT_EQ(buffer[size - 22], static_cast<char>(0));
     EXPECT_EQ(buffer[size - 21], static_cast<char>(12));
   }
+
+  {
+    const char* PROGRAM = R"(dialogue test {if (not $a) { "1" } else if (false) { "2" } else { "3" }})";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+    EXPECT_EQ(buffer[size - 24], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 23], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 22], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 21], static_cast<char>(76));
+
+    EXPECT_EQ(buffer[size - 28], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 27], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 26], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 25], static_cast<char>(0));
+
+    EXPECT_EQ(buffer[size - 32], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 31], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 30], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 29], static_cast<char>(4));
+
+    EXPECT_EQ(buffer[size - 36], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 35], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 34], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 33], static_cast<char>(12));
+  }
 }

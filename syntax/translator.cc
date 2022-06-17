@@ -240,10 +240,15 @@ void Translator::TranslateIf(const std::shared_ptr<If>& p_cmd) {
   res.parameters.push_back(0); // placeholder
   Push(std::move(res));
 
-  auto& address = m_pool.back();
+  int index = m_pool.size() - 1;
   TranslateContent(p_cmd->true_block);
-  address.parameters.back() = m_size;
-  TranslateContent(p_cmd->false_block);
+  m_pool[index].parameters.back() = m_size + 4;
+  if (p_cmd->false_block != nullptr) {
+    TranslateContent(p_cmd->false_block);
+  }
+  else if (p_cmd->another != nullptr) {
+    TranslateIf(p_cmd->another);
+  }
 }
 
 void Translator::TranslateAssign(const std::shared_ptr<Assign>& p_cmd) {
