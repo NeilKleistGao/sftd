@@ -318,10 +318,10 @@ TEST(CompileTest, ILTest) {
     char buffer[size];
     compiler.Write(buffer);
 
-//    EXPECT_EQ(buffer[size - 8], static_cast<char>(0));
-//    EXPECT_EQ(buffer[size - 7], static_cast<char>(0));
-//    EXPECT_EQ(buffer[size - 6], static_cast<char>(0));
-//    EXPECT_EQ(buffer[size - 5], static_cast<char>(1));
+    EXPECT_EQ(buffer[size - 8], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 7], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 6], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 5], static_cast<char>(size - 40));
 
     EXPECT_EQ(buffer[size - 12], static_cast<char>(0));
     EXPECT_EQ(buffer[size - 11], static_cast<char>(0));

@@ -193,29 +193,32 @@ void Compiler::PushStringInHead(const std::string& p_str) {
 }
 
 void Compiler::RecordGlobalAddress() {
-  int now = m_header.size();
+  int now = m_header.size() + 4;
   for (const auto& t : m_auto) {
     int id = t.GetID();
     m_address[id] = now;
-    now += t.GetSize();
+    now += t.GetSize() + 4;
   }
 
+  now += 4;
   for (const auto& t : m_trigger) {
     int id = t.GetID();
     m_address[id] = now;
-    now += t.GetSize();
+    now += t.GetSize() + 4;
   }
 
+  now += 4;
   for (const auto& t : m_interact) {
     int id = t.GetID();
     m_address[id] = now;
-    now += t.GetSize();
+    now += t.GetSize() + 4;
   }
 
+  now += 4;
   for (const auto& t : m_other) {
     int id = t.GetID();
     m_address[id] = now;
-    now += t.GetSize();
+    now += t.GetSize() + 4;
   }
 }
 
