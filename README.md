@@ -57,7 +57,7 @@ interact dialogue Talk2 when (not $first) {
     
     [Bob]: "OK."
     [Alice]: "Thnak you!"
-    anime @alice "thank"
+    animate @alice "thank"
 }
 
 auto dialogue Idle {

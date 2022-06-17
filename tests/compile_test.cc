@@ -367,4 +367,33 @@ TEST(CompileTest, ILTest) {
     EXPECT_EQ(buffer[size - 42], static_cast<char>(0));
     EXPECT_EQ(buffer[size - 41], static_cast<char>(8));
   }
+
+  {
+    const char* PROGRAM = R"(dialogue test{ animate @Bob "w" })";
+    Compiler compiler{};
+    compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "");
+    auto size = compiler.GetSize();
+    char buffer[size];
+    compiler.Write(buffer);
+
+    EXPECT_EQ(buffer[size - 8], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 7], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 6], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 5], static_cast<char>(0));
+
+    EXPECT_EQ(buffer[size - 12], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 11], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 10], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 9], static_cast<char>(1));
+
+    EXPECT_EQ(buffer[size - 16], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 15], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 14], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 13], static_cast<char>(1));
+
+    EXPECT_EQ(buffer[size - 20], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 19], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 18], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 17], static_cast<char>(9));
+  }
 }
