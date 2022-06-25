@@ -31,6 +31,7 @@
 Parser::Parser(const char* p_buffer, unsigned long p_length) : m_lex(p_buffer, p_length) {
   ConstantTable::GetInstance()->Clear();
   SymbolTable::GetInstance()->Clear();
+  I18NTable::GetInstance()->Clear();
 }
 
 std::shared_ptr<Program> Parser::GenerateAST() {

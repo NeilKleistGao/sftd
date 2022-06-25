@@ -38,12 +38,13 @@ extern "C" {
    * @param p_input: input filename
    * @param p_output: output filename
    * @param p_i18n_prefix: translation files' prefix
-   * @return const char*, a string standing for errors(null if no error)
+   * @param p_err: error information
+   * @return bool, false if no error
    */
   DLL_PREFIX bool Compile(const char* p_input, const char* p_output, const char* p_i18n_prefix, char* p_err) {
     FILE* fp = fopen(p_input, "r");
     if (fp == nullptr) {
-      std::strcpy(p_err, "File doesn't exist.");
+      std::sprintf(p_err, "File %s doesn't exist.", p_input);
       return true;
     }
 
@@ -68,6 +69,7 @@ extern "C" {
     fp = fopen(p_output, "wb");
     if (fp == nullptr) {
       std::strcpy(p_err, "Can't write the file.");
+      std::sprintf(p_err, "Can't write the file %s.", p_input);
       return true;
     }
 

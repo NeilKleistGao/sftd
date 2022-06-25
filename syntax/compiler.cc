@@ -91,6 +91,11 @@ const char* Compiler::Compile(char* p_content, unsigned long p_length, const cha
   catch (UnknownType& e) {
     return ExportError(&e);
   }
+  catch (...) {
+      return "Unknown Error!";
+  }
+
+  return nullptr;
 }
 
 void Compiler::Write(char* p_buffer) {
@@ -133,16 +138,18 @@ void Compiler::GenerateI18NFiles(const std::shared_ptr<Program>& p_program, cons
     fprintf(fp, "\t%s", lang.c_str());
   }
 
+  std::string key_prefix = p_prefix.substr(p_prefix.find_last_of('/') + 1);
+
   fputc('\n', fp);
   auto size = it->GetSize();
   for (int i = 0; i < size; ++i) {
-    fprintf(fp, "%s%d", p_prefix.c_str(), i);
+    fprintf(fp, "%s%d", key_prefix.c_str(), i);
     for (int j = 0; j < languages.size(); ++j) {
       if (j == 0) {
         auto id = it->GetStringID(i);
         auto str = ct->Find(id);
         fprintf(fp, "\t%s", str.c_str());
-        ct->Replace(id, p_prefix + std::to_string(i));
+        ct->Replace(id, key_prefix + std::to_string(i));
       }
       else {
         fprintf(fp, "\tTODO");
