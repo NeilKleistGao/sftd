@@ -19,27 +19,19 @@
 * SOFTWARE.
  */
 
-/// @file fold_test.cc
+/// @file i18n_test.cc
 
 #include <gtest/gtest.h>
-#include <list>
+#include <cstring>
 
-#include "sugars/fold.hpp"
+#include "syntax/compiler.h"
 
-TEST(FoldTest, FoldLeftTest) {
-  std::vector<int> vector {1, 2, 3, 4, 5};
-  EXPECT_EQ((FoldLeft(0, vector, [](const int& x, const int& y) -> int { return x + y; })), 15);
-  EXPECT_EQ((FoldLeft(-1, vector, [](const double& x, const int& y) -> double { return x + y; })), 14);
+TEST(EmptyTest, EmptyTest) {
+    {
+        const char* PROGRAM = R"(#{"zh_CN"} dialogue test {"中文测试"})"; // Only for test. DON'T add ANY UTF8 character in other codes.
+        Compiler compiler{};
+        compiler.Compile(const_cast<char*>(PROGRAM), std::strlen(PROGRAM), "chinese_test");
 
-  std::list<int> list {1, 2, 3, 4, 5};
-  EXPECT_EQ((FoldLeft(0, list, [](const int& x, const int& y) -> int { return x + y; })), 15);
-  EXPECT_EQ((FoldLeft(-1, list, [](const double& x, const int& y) -> double { return x + y; })), 14);
-}
 
-TEST(FoldTest, ReduceLeftTest) {
-  std::vector<int> vector {1, 2, 3, 4, 5};
-  EXPECT_EQ((ReduceLeft(vector, [](const int& x, const int& y) -> int { return x + y; })), 15);
-
-  std::list<int> list {1, 2, 3, 4, 5};
-  EXPECT_EQ((ReduceLeft(list, [](const int& x, const int& y) -> int { return x + y; })), 15);
+    }
 }
