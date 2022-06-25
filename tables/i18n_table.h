@@ -41,6 +41,10 @@ public:
   inline int GetStringID(int p_id) const {
     return m_pool[p_id];
   }
+
+  inline void Clear() {
+    m_pool.clear(); m_visit.clear();
+  }
 private:
   std::vector<int> m_pool;
   std::unordered_set<int> m_visit;
