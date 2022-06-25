@@ -28,6 +28,7 @@
 #endif
 
 #include <cstdio>
+#include <cstring>
 
 #include "syntax/compiler.h"
 
@@ -39,10 +40,11 @@ extern "C" {
    * @param p_i18n_prefix: translation files' prefix
    * @return const char*, a string standing for errors(null if no error)
    */
-  DLL_PREFIX const char* Compile(const char* p_input, const char* p_output, const char* p_i18n_prefix) {
+  DLL_PREFIX bool Compile(const char* p_input, const char* p_output, const char* p_i18n_prefix, char* p_err) {
     FILE* fp = fopen(p_input, "r");
     if (fp == nullptr) {
-      return "File doesn't exist.";
+      std::strcpy(p_err, "File doesn't exist.");
+      return true;
     }
 
     fseek(fp, 0, SEEK_END);
@@ -56,21 +58,23 @@ extern "C" {
     const char* res = compiler.Compile(buffer, size, p_i18n_prefix);
     delete[] buffer; buffer = nullptr;
     if (res != nullptr) {
-      return res;
+      std::strcpy(p_err, res);
+      return true;
     }
 
     size = compiler.GetSize();
     buffer = new char[size];
     compiler.Write(buffer);
-    fp = fopen(p_input, "wb");
+    fp = fopen(p_output, "wb");
     if (fp == nullptr) {
-      return "Can't write the file.";
+      std::strcpy(p_err, "Can't write the file.");
+      return true;
     }
 
     fwrite(buffer, sizeof(char), size, fp);
     fclose(fp);
     delete[] buffer; buffer = nullptr;
 
-    return nullptr;
+    return false;
   }
 }
