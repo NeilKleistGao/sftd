@@ -220,7 +220,7 @@ void Translator::TranslateSelect(const std::shared_ptr<Option>& p_cmd) {
     res.parameters.push_back(0); // placeholder
     Push(std::move(res));
 
-    auto& op = m_pool.back();
+    int index = m_pool.size() - 1;
     if (p_cmd->command != nullptr) {
       TranslateCommand(p_cmd->command);
     }
@@ -228,6 +228,7 @@ void Translator::TranslateSelect(const std::shared_ptr<Option>& p_cmd) {
       TranslateContent(p_cmd->res);
     }
 
+    auto& op = m_pool[index];
     op.parameters.back() = m_size + 4;
     TranslateSelect(p_cmd->next);
   }
