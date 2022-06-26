@@ -103,8 +103,11 @@ OperatorID: 11
 
 Parameters:
 - Character ID
+- Position X Type
 - Position X
+- Position Y Type
 - Position Y
+- Time Type
 - Time(for Operator 26)
 
 ### Conditions
@@ -120,14 +123,14 @@ Parameters:
 ### Calculations
 Calculate.
 
-OperatorID: 13(+), 14(-), 15(*), 16(/), 17(%), 18(=), 29(and), 20(or), 21(not), 22(-neg), 23(<), 24(>), 25(<=), 26(>=)
+OperatorID: 13(+), 14(-), 15(*), 16(/), 17(%), 18(=), 19(and), 20(or), 21(not), 22(-neg), 23(<), 24(>), 25(<=), 26(>=)
 
 Parameters:
 - Target variable
 - First Expression type(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
 - First parameter
 - Second Expression type(0 -> in memory, 1 -> string, 2 -> int, 3 -> float, 4 -> bool)
-- Second parameter(except 19, 22, 23)
+- Second parameter(except 21 and 22)
 
 ### Delay
 Wait for seconds.
@@ -135,6 +138,7 @@ Wait for seconds.
 OperatorID: 27
 
 Parameters:
+- Time Type
 - Time(in seconds)
 
 
