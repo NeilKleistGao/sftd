@@ -71,6 +71,9 @@ private:
   void TranslateSpeak(const std::shared_ptr<Speak>& p_cmd);
   void TranslatePublish(const std::shared_ptr<Publish>& p_cmd);
 
+  void AddConverge();
+  void FillConverge(int p_from, int p_to, int p_address);
+
   static int GetVariableType(TokenType p_type);
 
   inline void Push(ILCommand&& p_cmd) {
