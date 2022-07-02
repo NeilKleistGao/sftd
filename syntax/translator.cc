@@ -145,8 +145,8 @@ void Translator::TranslateCommand(const std::shared_ptr<Command>& p_cmd) {
       ->Case<Move>()([this](const std::shared_ptr<Move>& p_p) { TranslateMove(p_p); })
       ->Case<Goto>()([this](const std::shared_ptr<Goto>& p_p) { TranslateGoto(p_p); })
       ->Case<Use>()([this](const std::shared_ptr<Use>& p_p) { TranslateUse(p_p); })
-      ->Case<If>()([this](const std::shared_ptr<If>& p_p) { int s = m_pool.size(); TranslateIf(p_p); FillConverge(s, m_pool.size(), m_size - 4); })
-      ->Case<Select>()([this](const std::shared_ptr<Select>& p_p) { int s = m_pool.size(); TranslateSelect(p_p->option); FillConverge(s, m_pool.size(), m_size - 4); })
+      ->Case<If>()([this](const std::shared_ptr<If>& p_p) { int s = m_pool.size(); TranslateIf(p_p); FillConverge(s, m_pool.size(), m_size); })
+      ->Case<Select>()([this](const std::shared_ptr<Select>& p_p) { int s = m_pool.size(); TranslateSelect(p_p->option); FillConverge(s, m_pool.size(), m_size); })
       ->Case<Assign>()([this](const std::shared_ptr<Assign>& p_p) { TranslateAssign(p_p); })
       ->Case<Message>()([this](const std::shared_ptr<Message>& p_p) { TranslateMessage(p_p); })
       ->Case<Publish>()([this](const std::shared_ptr<Publish>& p_p) { TranslatePublish(p_p); })
@@ -230,7 +230,7 @@ void Translator::TranslateSelect(const std::shared_ptr<Option>& p_cmd) {
 
     AddConverge();
     auto& op = m_pool[index];
-    op.parameters.back() = m_size - 4;
+    op.parameters.back() = m_size;
     TranslateSelect(p_cmd->next);
   }
 }
@@ -246,7 +246,7 @@ void Translator::TranslateIf(const std::shared_ptr<If>& p_cmd) {
   int index = m_pool.size() - 1;
   TranslateContent(p_cmd->true_block);
   AddConverge();
-  m_pool[index].parameters.back() = m_size + 4;
+  m_pool[index].parameters.back() = m_size;
   if (p_cmd->false_block != nullptr) {
     TranslateContent(p_cmd->false_block);
   }
