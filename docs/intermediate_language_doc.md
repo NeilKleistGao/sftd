@@ -58,7 +58,8 @@ OperatorID: 4, 5
 
 Parameters:
 - String's ID
-- Time in float (for Operator 5)
+- Time format
+- Time
 
 ### Jump
 Call or jump to another part of dialogues.
@@ -162,6 +163,14 @@ Parameters:
 - Target Address
 - Type
 - Value
+
+### Converge
+Converge branch commands to an address
+
+OperatorID: 30
+
+Parameters:
+- The target address
 
 ### End
 End a dialogue.
