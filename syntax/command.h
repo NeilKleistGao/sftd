@@ -57,6 +57,7 @@ enum class CommandType {
   DELAY,
   PUBLISH,
   SET_DATA,
+  CONVERGE,
   END_DIALOGUE = 255
 };
 

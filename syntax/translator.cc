@@ -145,8 +145,8 @@ void Translator::TranslateCommand(const std::shared_ptr<Command>& p_cmd) {
       ->Case<Move>()([this](const std::shared_ptr<Move>& p_p) { TranslateMove(p_p); })
       ->Case<Goto>()([this](const std::shared_ptr<Goto>& p_p) { TranslateGoto(p_p); })
       ->Case<Use>()([this](const std::shared_ptr<Use>& p_p) { TranslateUse(p_p); })
-      ->Case<If>()([this](const std::shared_ptr<If>& p_p) { TranslateIf(p_p); })
-      ->Case<Select>()([this](const std::shared_ptr<Select>& p_p) { TranslateSelect(p_p->option); })
+      ->Case<If>()([this](const std::shared_ptr<If>& p_p) { int s = m_pool.size(); TranslateIf(p_p); FillConverge(s, m_pool.size(), m_size); })
+      ->Case<Select>()([this](const std::shared_ptr<Select>& p_p) { int s = m_pool.size(); TranslateSelect(p_p->option); FillConverge(s, m_pool.size(), m_size); })
       ->Case<Assign>()([this](const std::shared_ptr<Assign>& p_p) { TranslateAssign(p_p); })
       ->Case<Message>()([this](const std::shared_ptr<Message>& p_p) { TranslateMessage(p_p); })
       ->Case<Publish>()([this](const std::shared_ptr<Publish>& p_p) { TranslatePublish(p_p); })
@@ -228,8 +228,9 @@ void Translator::TranslateSelect(const std::shared_ptr<Option>& p_cmd) {
       TranslateContent(p_cmd->res);
     }
 
+    AddConverge();
     auto& op = m_pool[index];
-    op.parameters.back() = m_size + 4;
+    op.parameters.back() = m_size;
     TranslateSelect(p_cmd->next);
   }
 }
@@ -244,7 +245,8 @@ void Translator::TranslateIf(const std::shared_ptr<If>& p_cmd) {
 
   int index = m_pool.size() - 1;
   TranslateContent(p_cmd->true_block);
-  m_pool[index].parameters.back() = m_size + 4;
+  AddConverge();
+  m_pool[index].parameters.back() = m_size;
   if (p_cmd->false_block != nullptr) {
     TranslateContent(p_cmd->false_block);
   }
@@ -343,3 +345,19 @@ int Translator::GetVariableType(TokenType p_type) {
 
   return res;
 }
+
+void Translator::AddConverge() {
+  auto res = ILCommand{CommandType::CONVERGE};
+  res.parameters.push_back(0); // placeholder
+  Push(std::move(res));
+}
+
+void Translator::FillConverge(int p_from, int p_to, int p_address) {
+  for (int i = p_from; i < p_to; ++i) {
+    auto& cmd = m_pool[i];
+    if (cmd.type == CommandType::CONVERGE && cmd.parameters[0] == 0) {
+      cmd.parameters[0] = p_address;
+    }
+  }
+}
+
