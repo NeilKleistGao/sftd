@@ -370,20 +370,20 @@ TEST(CompileTest, ILTest) {
     EXPECT_EQ(buffer[size - 22], static_cast<char>(0));
     EXPECT_EQ(buffer[size - 21], static_cast<char>(60));
 
+    EXPECT_EQ(buffer[size - 28], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 27], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 26], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 25], static_cast<char>(2));
+
+    EXPECT_EQ(buffer[size - 32], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 31], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 30], static_cast<char>(0));
+    EXPECT_EQ(buffer[size - 29], static_cast<char>(8));
+
     EXPECT_EQ(buffer[size - 36], static_cast<char>(0));
     EXPECT_EQ(buffer[size - 35], static_cast<char>(0));
     EXPECT_EQ(buffer[size - 34], static_cast<char>(0));
-    EXPECT_EQ(buffer[size - 33], static_cast<char>(2));
-
-    EXPECT_EQ(buffer[size - 40], static_cast<char>(0));
-    EXPECT_EQ(buffer[size - 39], static_cast<char>(0));
-    EXPECT_EQ(buffer[size - 38], static_cast<char>(0));
-    EXPECT_EQ(buffer[size - 37], static_cast<char>(8));
-
-    EXPECT_EQ(buffer[size - 44], static_cast<char>(0));
-    EXPECT_EQ(buffer[size - 43], static_cast<char>(0));
-    EXPECT_EQ(buffer[size - 42], static_cast<char>(0));
-    EXPECT_EQ(buffer[size - 41], static_cast<char>(60));
+    EXPECT_EQ(buffer[size - 33], static_cast<char>(60));
   }
 
   {

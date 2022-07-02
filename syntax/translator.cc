@@ -230,7 +230,7 @@ void Translator::TranslateSelect(const std::shared_ptr<Option>& p_cmd) {
 
     AddConverge();
     auto& op = m_pool[index];
-    op.parameters.back() = m_size + 4;
+    op.parameters.back() = m_size - 4;
     TranslateSelect(p_cmd->next);
   }
 }
