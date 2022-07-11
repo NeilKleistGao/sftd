@@ -47,7 +47,7 @@ void Translator::TranslateDialogue(const std::shared_ptr<Dialogue>& p_dialogue) 
   TranslateContent(p_dialogue->content);
 
   if (p_dialogue->condition != nullptr) {
-    m_pool[index].parameters.back() = m_size + 4;
+    m_pool[index].parameters.back() = m_size;
   }
 
   Push(ILCommand{CommandType::END_DIALOGUE});

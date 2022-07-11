@@ -109,7 +109,7 @@ Parameters:
 - Position Y Type
 - Position Y
 - Time Type
-- Time(for Operator 26)
+- Time
 
 ### Conditions
 Jump by the given condition.
