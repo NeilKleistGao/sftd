@@ -1,5 +1,6 @@
 module Main where
 
+import Test.QuickCheck (quickCheck)
 import RW.Reader
 import RW.Writer
 
@@ -12,13 +13,14 @@ getFullInputPath caseName = "test/ds/" ++ caseName ++ ".ds"
 getFullOutputPath :: String -> String
 getFullOutputPath caseName = "test/dd/" ++ caseName ++ ".dd"
 
-doTest :: [String] -> IO () -> ()
-doTest [] _ = ()
-doTest (x: xs) _ = do
+doTest :: [String] -> IO ()
+doTest [] = putStrLn("Tests End.")
+doTest (x: xs) = do
   let script = readDialogueScript(getFullInputPath(x))
-  doTest xs (writeDialogueData (getFullOutputPath(x)) "")
+  writeDialogueData (getFullOutputPath(x)) ""
+  doTest xs
 
 main :: IO ()
 main = do
-  let _ = doTest testCases (putStrLn("Tests Start."))
-  putStrLn("Tests End.")
+  putStrLn("Tests Start.")
+  doTest testCases

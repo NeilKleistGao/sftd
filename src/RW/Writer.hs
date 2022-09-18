@@ -11,4 +11,5 @@ writeDialogueData filename content = do
   if isOk
   then do
     hPutStr handle ("sftd" ++ content)
+    hClose(handle)
   else putStrLn("can't write file: " ++ filename)
