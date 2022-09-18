@@ -1,4 +1,9 @@
 module Main where
 
+import RW.Reader
+
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main = do
+  filename <- getLine
+  content <- readDialogueScript(filename)
+  putStrLn("Compiled.")
