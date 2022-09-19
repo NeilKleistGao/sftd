@@ -1,5 +1,5 @@
 module Lexer.Tokens(
-  Token, keywordsList
+  Token, keywordsList, notationsList
 ) where
 
 data Token = IntLit Int -- e.g. 42
@@ -12,4 +12,8 @@ data Token = IntLit Int -- e.g. 42
            | Blank -- e.g. \n
 
 keywordsList :: [String]
-keywordsList = ["if", "else", "default", "where"]
+keywordsList = ["if", "else", "default", "where", "in"]
+
+notationsList :: [Char]
+notationsList = ['[', ']', '(', ')', '>', '<', '~', '-', '@', '#', '+', '*', '/', '\\',
+                 '=', '!', '|', '&', '$', ':', '"', '.', '?', '!', '%']
