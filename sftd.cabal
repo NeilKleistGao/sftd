@@ -17,7 +17,7 @@ cabal-version:       >=1.10
 
 executable sftd
   main-is:             Main.hs
-  other-modules:       RW.Reader, RW.Writer
+  other-modules:       RW.Reader, RW.Writer, Compiler, Lexer.Analyzer, Lexer.Tokens
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13
   hs-source-dirs:      src
@@ -26,7 +26,7 @@ executable sftd
 Test-Suite test-sftd
     type:                exitcode-stdio-1.0
     main-is:             DiffTest.hs
-    other-modules:       RW.Reader, RW.Writer
+    other-modules:       RW.Reader, RW.Writer, Compiler, Lexer.Analyzer, Lexer.Tokens
     hs-source-dirs:      src, test
     build-depends:       base >=4.12 && <4.13, QuickCheck, HUnit
     default-language:    Haskell2010

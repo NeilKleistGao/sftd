@@ -3,6 +3,7 @@ module Main where
 import Test.QuickCheck (quickCheck)
 import RW.Reader
 import RW.Writer
+import Compiler
 
 testCases :: [String]
 testCases = ["empty"]
@@ -16,8 +17,8 @@ getFullOutputPath caseName = "test/dd/" ++ caseName ++ ".dd"
 doTest :: [String] -> IO ()
 doTest [] = putStrLn("Tests End.")
 doTest (x: xs) = do
-  let script = readDialogueScript(getFullInputPath(x))
-  writeDialogueData (getFullOutputPath(x)) ""
+  script <- readDialogueScript(getFullInputPath(x))
+  writeDialogueData (getFullOutputPath(x)) (compile script)
   doTest xs
 
 main :: IO ()
