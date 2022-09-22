@@ -7,4 +7,4 @@ import Lexer.Analyzer
 compile :: String -> String
 compile src = do
   let tokens = analyzeTokens src
-  "" -- TODO
+  foldl (\res tk -> res ++ show (tk) ++ "\n") ("") (tokens) -- TODO

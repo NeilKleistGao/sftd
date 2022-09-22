@@ -21,3 +21,14 @@ notationsList = ['[', ']', '(', ')', '>', '<', '~', '-', '@', '#', '+', '*', '/'
 
 ignoredList :: [Char]
 ignoredList = ['\n', '\r', '\t']
+
+instance Show Token where
+  show (IntLit i) = "(IntLit " ++ show i ++ ")"
+  show (FloatLit f) = "(FloatLit " ++ show f ++ ")"
+  show (StringLit s) = "(StringLit " ++ show s ++ ")"
+  show (Variable name) = "(Variable " ++ show name ++ ")"
+  show (Notation n) = "(Notation " ++ show n ++ ")"
+  show (Keyword name) = "(Keyword " ++ show name ++ ")"
+  show (Indent) = "(Indent)"
+  show (Empty) = ""
+  show (Error err) = "(Error " ++ show err ++ ")"

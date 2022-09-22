@@ -6,7 +6,7 @@ import RW.Writer
 import Compiler
 
 testCases :: [String]
-testCases = ["empty"]
+testCases = ["empty", "demo"]
 
 getFullInputPath :: String -> String
 getFullInputPath caseName = "test/ds/" ++ caseName ++ ".ds"
