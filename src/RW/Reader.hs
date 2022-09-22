@@ -11,7 +11,7 @@ readContent handle = do
   then do
     current <- hGetLine(handle)
     others <- readContent(handle)
-    return $ current ++ others
+    return $ current ++ "\n" ++ others
   else return []
 
 readDialogueScript :: FilePath -> IO String

@@ -46,11 +46,11 @@ parseVariableAndKeyword str = do
 
 getNextToken :: String -> TokenCC
 getNextToken str
+  | ((take 2 str) == "//") = parseComment(str)
   | isDigit (str !! 0) = parseNumber(str)
   | (str !! 0) == '"' = parseString(takeRest str 1)
   | (str !! 0) == ' ' = (Indent, takeRest str 1)
   | (str !! 0) `elem` notationsList = (Notation(str !! 0), takeRest str 1)
-  | ((take 2 str) == "//") = parseComment(str)
   | (str !! 0) `elem` ignoredList = (Empty, takeRest str 1)
   | True = parseVariableAndKeyword(str)
 
