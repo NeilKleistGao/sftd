@@ -16,8 +16,8 @@ keywordsList :: [String]
 keywordsList = ["if", "else", "default", "where", "in","true", "false"]
 
 notationsList :: [Char]
-notationsList = ['[', ']', '(', ')', '>', '<', '~', '-', '@', '#', '+', '*', '/', '\\',
-                 '=', '!', '|', '&', '$', ':', '"', '.', '?', '!', '%']
+notationsList = ['[', ']', '(', ')', '>', '<', '{', '}', '~', '-', '@', '#', '+', '*',
+                 '/', '\\', '=', '!', '|', '&', '$', ':', '"', '.', '?', '!', '%', ',']
 
 ignoredList :: [Char]
 ignoredList = ['\n', '\r', '\t']

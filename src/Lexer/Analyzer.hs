@@ -32,7 +32,7 @@ findStringEnd s i
 parseString :: String -> TokenCC
 parseString str = do
   let end = findStringEnd str 0
-  if (end == -1) then (Error "expect end of string", takeRest str (end + 1))
+  if (end == -1) then (Error "expect end of string", "")
   else (StringLit (take end str), takeRest str (end + 1))
 
 parseComment :: String -> TokenCC
@@ -41,8 +41,8 @@ parseComment str = (Empty, dropWhile (/= '\n') str)
 parseVariableAndKeyword :: String -> TokenCC
 parseVariableAndKeyword str = do
   let name = takeWhile (\c -> isDigit c || isAlphabet c || c == '_') str
-  if (name `elem` keywordsList) then (Keyword name, takeRest str ((length name) + 1))
-  else (Variable name, takeRest str ((length name) + 1))
+  if (name `elem` keywordsList) then (Keyword name, takeRest str (length name))
+  else (Variable name, takeRest str (length name))
 
 getNextToken :: String -> TokenCC
 getNextToken str
