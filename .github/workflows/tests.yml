@@ -17,12 +17,3 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: haskell/actions/setup@v2
-        with:
-          ghc-version: '8.6.5'
-          cabal-version: '2.4.0.0'
-      - name: Run Tests
-        run: cabal new-test
-      - name: Check no changes
-        run: git diff-files -p --exit-code --diff-filter=ADMR -w
-      
