@@ -27,3 +27,5 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration $config --no-restore
+      - name: Test PR      
+        run: dotnet test --no-restore --no-build --configuration $config
